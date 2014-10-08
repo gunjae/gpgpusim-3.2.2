@@ -992,6 +992,7 @@ public:
    unsigned rounding_mode() const { return m_rounding_mode;}
    unsigned saturation_mode() const { return m_saturation_mode;}
    unsigned dimension() const { return m_geom_spec;}
+   unsigned barrier_op() const {return m_barrier_op;}
    enum vote_mode_t { vote_any, vote_all, vote_uni, vote_ballot };
    enum vote_mode_t vote_mode() const { return m_vote_mode; }
 
@@ -1021,8 +1022,10 @@ public:
       return false;
    }
 
+
 private:
    void set_opcode_and_latency();
+   void set_bar_type();
    void set_fp_or_int_archop();
    void set_mul_div_or_other_archop();
 
@@ -1054,6 +1057,7 @@ private:
    unsigned            m_rounding_mode;
    unsigned            m_compare_op;
    unsigned            m_saturation_mode;
+   unsigned 		   m_barrier_op;
 
    std::list<int>          m_scalar_type;
    memory_space_t m_space_spec;

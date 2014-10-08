@@ -155,6 +155,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 %token SAT_OPTION
 %token FTZ_OPTION
 %token NEG_OPTION
+%token SYNC_OPTION
+%token RED_OPTION
+%token ARRIVE_OPTION
+%token ATOMIC_POPC
 %token ATOMIC_AND
 %token ATOMIC_OR
 %token ATOMIC_XOR
@@ -408,6 +412,9 @@ option: type_spec
 	| compare_spec
 	| addressable_spec
 	| rounding_mode
+	| SYNC_OPTION { add_option(SYNC_OPTION); }	
+	| ARRIVE_OPTION { add_option(ARRIVE_OPTION); }
+	| RED_OPTION { add_option(RED_OPTION); }	
 	| UNI_OPTION { add_option(UNI_OPTION); }
 	| WIDE_OPTION { add_option(WIDE_OPTION); }
 	| ANY_OPTION { add_option(ANY_OPTION); }
@@ -439,6 +446,7 @@ option: type_spec
 	;
 
 atomic_operation_spec: ATOMIC_AND { add_option(ATOMIC_AND); } 
+	| ATOMIC_POPC { add_option(ATOMIC_POPC); }
 	| ATOMIC_OR { add_option(ATOMIC_OR); } 
 	| ATOMIC_XOR { add_option(ATOMIC_XOR); } 
 	| ATOMIC_CAS { add_option(ATOMIC_CAS); } 

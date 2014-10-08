@@ -1044,6 +1044,11 @@ ptx_instruction::ptx_instruction( int opcode,
    for ( i=options.begin(); i!= options.end(); i++, n++ ) {
       int last_ptx_inst_option = *i;
       switch ( last_ptx_inst_option ) {
+      case SYNC_OPTION:
+      case ARRIVE_OPTION:
+      case RED_OPTION:
+          m_barrier_op = last_ptx_inst_option;
+          break;
       case EQU_OPTION:
       case NEU_OPTION:
       case LTU_OPTION:
