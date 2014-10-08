@@ -1,0 +1,2 @@
+Changes of new 3.2.2
+ - Add hash set_index_function. It is set as hash function for GTX480
