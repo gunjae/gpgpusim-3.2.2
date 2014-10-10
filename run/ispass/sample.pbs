@@ -1,0 +1,17 @@
+#!/bin/bash
+#*** The "#PBS" lines must come before any non-blank non-comment lines ***
+#PBS -l walltime=100:00:00,nodes=1:ppn=1
+
+WORKSPACE=$PBS_O_WORKDIR
+BENCHMARK=/share/apps/rodinia_2.2/cuda
+DATASET=/share/apps/rodinia_2.2/data
+GPGPUSIM=/share/apps/gpgpu-sim/v3.x
+
+echo $WORKSPACE
+cd $GPGPUSIM
+source setup_environment
+cd $WORKSPACE
+
+# Example using hotspot. For other benchmarks, please see their run command in their run script and modify accordingly.
+# Example from hotspot run script: ./hotspot 512 2 2 ../../data/hotspot/temp_512 ../../data/hotspot/power_512 output.out
+$BENCHMARK/hotspot/hotspot 512 2 2 $DATASET/hotspot/temp_512 $DATASET/hotspot/power_512 output.out

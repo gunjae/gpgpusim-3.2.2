@@ -1,0 +1,348 @@
+ISPASS_DIR=~/workspace/gpgpu-bench/ispass2009
+ISPASS_BIN=~/workspace/gpgpu-bench/ispass2009/bin/release
+
+RODINIA_DIR=~/workspace/gpgpu-bench/rodinia_2.4/cuda
+RODINIA_DATA=~/workspace/gpgpu-bench/rodinia_2.4/data
+RODINIA_BIN=~/workspace/gpgpu-bench/rodinia_2.4/bin/linux/cuda
+
+PARBOIL_DIR=~/workspace/gpgpu-bench/parboil/parboil
+PARBOIL_BIN=~/workspace/gpgpu-bench/parboil/benchmarks
+PARBOIL_DATA=~/workspace/gpgpu-bench/parboil/datasets
+PARBOIL_COMMON=~/workspace/gpgpu-bench/parboil/common
+
+SDK_DIR=~/workspace/gpgpu-bench/sdk4/src
+SDK_BIN=~/workspace/gpgpu-bench/sdk4/bin/linux/release
+
+MARS_BIN=~/workspace/gpgpu-bench/Mars/bin
+MARS_DATA=~/workspace/gpgpu-bench/Mars/sample_apps/BIN_TMPL
+
+BIN=""
+DSET=""
+IDATA=""
+ODATA=""
+PAR=""
+
+case "$BENCH" in
+AES) 
+	BIN="${ISPASS_BIN}/AES"
+	IDATA="e 128 ${ISPASS_DIR}/AES/data/output.bmp ${ISPASS_DIR}/AES/data/key128.txt"
+	;;
+BFS)
+	BIN="${ISPASS_BIN}/BFS"
+	IDATA="${ISPASS_DIR}/BFS/data/graph4096.txt"
+	;;
+CP)
+	BIN="${ISPASS_BIN}/CP"
+	;;
+LIB)
+	BIN="${ISPASS_BIN}/LIB"
+	;;
+LPS)
+	BIN="${ISPASS_BIN}/LPS"
+	;;
+MUM)
+	BIN="${ISPASS_BIN}/MUM"
+	IDATA="${ISPASS_DIR}/MUM/data/NC_003997.20k.fna ${ISPASS_DIR}/MUM/data/NC_003997_q25bp.50k.fna"
+	;;
+NN)
+	BIN="${ISPASS_BIN}/NN"
+	PAR="28"
+	;;
+NQU)
+	BIN="${ISPASS_BIN}/NQU"
+	;;
+RAY)
+	BIN="${ISPASS_BIN}/RAY"
+	PAR="32 32"
+	;;
+STO)
+	BIN="${ISPASS_BIN}/STO"
+	;;
+WP)
+	echo "10 ${ISPASS_DIR}/WP/data/" | ${ISPASS_BIN}/WP
+	;;
+bpr)
+	BIN="${RODINIA_BIN}/backprop"
+	PAR="65536"
+	;;
+bfs)
+	BIN="${RODINIA_BIN}/bfs"
+	IDATA="${RODINIA_DATA}/bfs/graph1MW_6.txt"
+	;;
+gaf)
+	BIN="${RODINIA_BIN}/gaussian"
+	IDATA="-f ${RODINIA_DATA}/gaussian/matrix4.txt"
+	;;
+gas)
+	BIN="${RODINIA_BIN}/gaussian"
+	PAR="-s 16"
+	;;
+htw)
+	BIN="${RODINIA_BIN}/heartwall"
+	IDATA="${RODINIA_DATA}/heartwall/test.avi"
+	PAR="5"
+	;;
+hsp)
+	BIN="${RODINIA_BIN}/hotspot"
+	IDATA="512 2 2 ${RODINIA_DATA}/hotspot/temp_512"
+	ODATA="${RODINIA_DATA}/hotspot/power_512 output.out"
+	;;
+kmn)
+	BIN="${RODINIA_BIN}/kmeans"
+	IDATA="-o -i ${RODINIA_DATA}/kmeans/kdd_cup" 
+	;;
+lud)
+	BIN="${RODINIA_BIN}/lud_cuda"
+	PAR="-s 256 -v"
+	;;
+pff)
+	BIN="${RODINIA_BIN}/particlefilter_float"
+	PAR="-x 128 -y 128 -z 10 -np 1000"
+	;;
+pth)
+	BIN="${RODINIA_BIN}/pathfinder"
+	PAR="100000 100 20"
+	;;
+sr1)
+	BIN="${RODINIA_BIN}/srad_v1"
+	PAR="100 0.5 502 458"
+	;;
+scg)
+	BIN="${RODINIA_BIN}/sc_gpu"
+	IDATA="10 20 256 65536 65536 1000 none"
+	ODATA="output.txt"
+	;;
+bf1)
+	BIN=${PARBOIL_BIN}/bfs/build/cuda_default/bfs
+	DSET=${PARBOIL_DATA}/bfs/1M/input
+	IDATA="-i ${DSET}/graph_input.dat"
+	ODATA="-o bfs.out"
+#	${PARBOIL_DIR} run bfs cuda 1M
+	;;
+bfn)
+	BIN=${PARBOIL_BIN}/bfs/build/cuda_default/bfs
+	DSET=${PARBOIL_DATA}/bfs/NY/input
+	IDATA="-i ${DSET}/graph_input.dat"
+	ODATA="-o bfs.out"
+#	${PARBOIL_DIR} run bfs cuda NY
+	;;
+bff)
+	BIN=${PARBOIL_BIN}/bfs/build/cuda_default/bfs
+	DSET=${PARBOIL_DATA}/bfs/SF/input
+	IDATA="-i ${DSET}/graph_input.dat"
+	ODATA="-o bfs.out"
+#	${PARBOIL_DIR} run bfs cuda SF
+	;;
+bfu)
+	BIN=${PARBOIL_BIN}/bfs/build/cuda_default/bfs
+	DSET=${PARBOIL_DATA}/bfs/UT/input
+	IDATA="-i ${DSET}/graph_input.dat"
+	ODATA="-o bfs.out"
+#	${PARBOIL_DIR} run bfs cuda UT
+	;;
+cut)
+	BIN=${PARBOIL_BIN}/cutcp/build/cuda_default/cutcp
+	DSET=${PARBOIL_DATA}/cutcp/small/input
+	IDATA="-i ${DSET}/watbox.sl40.pqr"
+	ODATA="-o lattice.dat"
+	;;
+his)
+	BIN=${PARBOIL_BIN}/histo/build/cuda_default/histo
+	DSET=${PARBOIL_DATA}/histo/default/input
+	IDATA="-i ${DSET}/img.bin"
+	ODATA="-o ref.bmp"
+	PAR="-- 20 4"
+	;;
+lbm)
+	BIN=${PARBOIL_BIN}/lbm/build/cuda_default/lbm
+	DSET=${PARBOIL_DATA}/lbm/short/input
+	IDATA="-i ${DSET}/120_120_150_ldc.of"
+	ODATA="-o reference.dat"
+	PAR="-- 100"
+	#PAR="-- 3000"
+	;;
+mrg)
+	BIN=${PARBOIL_BIN}/mri-gridding/build/cuda_default/mri-gridding
+	DSET=${PARBOIL_DATA}/mri-gridding/small/input
+	IDATA="-i ${DSET}/small.uks"
+	ODATA="-o output.txt"
+	PAR="-- 32 0"
+	;;
+mrq)
+	BIN=${PARBOIL_BIN}/mri-q/build/cuda_default/mri-q
+	DSET=${PARBOIL_DATA}/mri-q/small/input
+	IDATA="-i ${DSET}/32_32_32_dataset.bin"
+	ODATA="-o 32_32_32_dataset.out"
+	;;
+sad)
+	BIN=${PARBOIL_BIN}/sad/build/cuda_default/sad
+	DSET=${PARBOIL_DATA}/sad/default/input
+	IDATA="-i ${DSET}/reference.bin,${DSET}/frame.bin"
+	ODATA="-o out.bin"
+	;;
+sge)
+	BIN=${PARBOIL_BIN}/sgemm/build/cuda_default/sgemm
+	DSET=${PARBOIL_DATA}/sgemm/medium/input
+	IDATA="-i ${DSET}/matrix1.txt,${DSET}/matrix2t.txt,${DSET}/matrix2t.txt"
+	ODATA="-o matrix3.txt"
+	;;
+spm)
+	BIN=${PARBOIL_BIN}/spmv/build/cuda_default/spmv
+	DSET=${PARBOIL_DATA}/spmv/medium/input
+	IDATA="-i ${DSET}/bcsstk18.mtx,${DSET}/vector.bin"
+	ODATA="-o bcsstk18.out"
+	;;
+ste)
+	BIN=${PARBOIL_BIN}/stencil/build/cuda_default/stencil
+	DSET=${PARBOIL_DATA}/stencil/default/input
+	IDATA="-i ${DSET}/512x512x64x100.bin"
+	ODATA="-o 512x512x64.out"
+	PAR="-- 512 512 64 100"
+	;;
+tpc)
+	BIN=${PARBOIL_BIN}/tpacf/build/cuda_default/tpacf
+	DSET=${PARBOIL_DATA}/tpacf/medium/input
+	IDATA="-i ${DSET}/Datapnts.1,${DSET}/Randompnts.1,${DSET}/Randompnts.2,${DSET}/Randompnts.3,${DSET}/Randompnts.4,${DSET}/Randompnts.5,${DSET}/Randompnts.6,${DSET}/Randompnts.7,${DSET}/Randompnts.8,${DSET}/Randompnts.9,${DSET}/Randompnts.10,${DSET}/Randompnts.11,${DSET}/Randompnts.12,${DSET}/Randompnts.13,${DSET}/Randompnts.14,${DSET}/Randompnts.15,${DSET}/Randompnts.16,${DSET}/Randompnts.17,${DSET}/Randompnts.18,${DSET}/Randompnts.19,${DSET}/Randompnts.20,${DSET}/Randompnts.21,${DSET}/Randompnts.22,${DSET}/Randompnts.23,${DSET}/Randompnts.24,${DSET}/Randompnts.25,${DSET}/Randompnts.26,${DSET}/Randompnts.27,${DSET}/Randompnts.28,${DSET}/Randompnts.29,${DSET}/Randompnts.30,${DSET}/Randompnts.31,${DSET}/Randompnts.32,${DSET}/Randompnts.33,${DSET}/Randompnts.34,${DSET}/Randompnts.35,${DSET}/Randompnts.36,${DSET}/Randompnts.37,${DSET}/Randompnts.38,${DSET}/Randompnts.39,${DSET}/Randompnts.40,${DSET}/Randompnts.41,${DSET}/Randompnts.42,${DSET}/Randompnts.43,${DSET}/Randompnts.44,${DSET}/Randompnts.45,${DSET}/Randompnts.46,${DSET}/Randompnts.47,${DSET}/Randompnts.48,${DSET}/Randompnts.49,${DSET}/Randompnts.50,${DSET}/Randompnts.51,${DSET}/Randompnts.52,${DSET}/Randompnts.53,${DSET}/Randompnts.54,${DSET}/Randompnts.55,${DSET}/Randompnts.56,${DSET}/Randompnts.57,${DSET}/Randompnts.58,${DSET}/Randompnts.59,${DSET}/Randompnts.60,${DSET}/Randompnts.61,${DSET}/Randompnts.62,${DSET}/Randompnts.63,${DSET}/Randompnts.64,${DSET}/Randompnts.65,${DSET}/Randompnts.66,${DSET}/Randompnts.67,${DSET}/Randompnts.68,${DSET}/Randompnts.69,${DSET}/Randompnts.70,${DSET}/Randompnts.71,${DSET}/Randompnts.72,${DSET}/Randompnts.73,${DSET}/Randompnts.74,${DSET}/Randompnts.75,${DSET}/Randompnts.76,${DSET}/Randompnts.77,${DSET}/Randompnts.78,${DSET}/Randompnts.79,${DSET}/Randompnts.80,${DSET}/Randompnts.81,${DSET}/Randompnts.82,${DSET}/Randompnts.83,${DSET}/Randompnts.84,${DSET}/Randompnts.85,${DSET}/Randompnts.86,${DSET}/Randompnts.87,${DSET}/Randompnts.88,${DSET}/Randompnts.89,${DSET}/Randompnts.90,${DSET}/Randompnts.91,${DSET}/Randompnts.92,${DSET}/Randompnts.93,${DSET}/Randompnts.94,${DSET}/Randompnts.95,${DSET}/Randompnts.96,${DSET}/Randompnts.97,${DSET}/Randompnts.98,${DSET}/Randompnts.99,${DSET}/Randompnts.100"
+	ODATA="-o tpacf.out"
+	PAR="-- -n 100 -p 4096"
+	;;
+alt)
+	BIN="${SDK_BIN}/alignedTypes"
+	;;
+asy)
+	BIN="${SDK_BIN}/asyncAPI"
+	;;
+bin)
+	BIN="${SDK_BIN}/binomialOptions"
+	;;
+blk)
+	BIN="${SDK_BIN}/BlackScholes"
+	;;
+#box)
+#	${SDK_BIN}/boxFilter ${SDK_DIR}/boxFilter
+#	;;
+cnv)
+	BIN="${SDK_BIN}/convolutionSeparable"
+	;;
+cnt)
+	BIN="${SDK_BIN}/convolutionTexture"
+	;;
+dct)
+	BIN="${SDK_BIN}/dct8x8"
+	IDATA="${SDK_DIR}/dct8x8/data/barbara.ppm"
+	;;
+dxt)
+	cp ${SDK_DIR}/dxtc/data/* .
+	BIN="${SDK_BIN}/dxtc >> gpugj.rpt"
+	;;
+eig)
+	BIN="${SDK_BIN}/eigenvalues"
+	;;
+hst)
+	BIN="${SDK_BIN}/histogram"
+	;;
+mgs)
+	BIN="${SDK_BIN}/mergeSort"
+	;;
+mst)
+	cp ${SDK_DIR}/MersenneTwister/data/* .
+	BIN="${SDK_BIN}/MersenneTwister"
+	;;
+mca)
+	BIN="${SDK_BIN}/MonteCarlo"
+	;;
+qsr)
+	BIN="${SDK_BIN}/quasirandomGenerator"
+	;;
+red)
+	BIN="${SDK_BIN}/reduction"
+	;;
+spd)
+	BIN="${SDK_BIN}/scalarProd"
+	;;
+scn)
+	BIN="${SDK_BIN}/scan"
+	;;
+sao)
+	BIN="${SDK_BIN}/SingleAsianOptionP"
+	;;
+sbq)
+	BIN="${SDK_BIN}/SobolQRNG"
+	;;
+snt)
+	BIN="${SDK_BIN}/sortingNetworks"
+	;;
+tfr)
+	BIN="${SDK_BIN}/threadFenceReduction"
+	;;
+txp)
+	BIN="${SDK_BIN}/transpose"
+	;;
+vad)
+	BIN="${SDK_BIN}/vectorAdd"
+	;;
+wal)
+	BIN="${SDK_BIN}/fastWalshTransform"
+	;;
+ii)
+	echo "generating 28MB data..."
+	mkdir data
+	for ((i=0; i<1024; i++)) do
+		cat ${MARS_DATA}/II_BIN/sample/1.html >> data/1.html
+		cat ${MARS_DATA}/II_BIN/sample/2.html >> data/2.html
+		cat ${MARS_DATA}/II_BIN/sample/3.html >> data/3.html
+	done
+	BIN=${MARS_BIN}/InvertedIndex
+	IDATA="data/"
+	;;
+km)
+	BIN=${MARS_BIN}/Kmeans
+	PAR="30000 3 24"
+	;;
+mm)
+	BIN=${MARS_BIN}/MatrixMul
+	PAR="1024 1024"
+	;;
+pvc)
+	echo "generating data..."
+	cp ${MARS_DATA}/GenWebLogSrc/Gen .
+	chmod +x ./Gen
+	./Gen data 1000000 count
+	BIN=${MARS_BIN}/PageViewCount
+	IDATA="data"
+	;;
+pvr)
+	echo "generating data..."
+	cp ${MARS_DATA}/GenWebLogSrc/Gen .
+	chmod +x ./Gen
+	./Gen data 1000000 rank
+	BIN=${MARS_BIN}/PageViewRank
+	IDATA="data"
+	;;
+sm)
+	echo "generating data..."
+	for ((i=0; i<1024; i++)) do
+		cat ${MARS_DATA}/SM_BIN/sample.txt >> data.txt
+	done
+	BIN=${MARS_BIN}/StringMatch
+	IDATA="data.txt org"
+	;;
+ss)
+	BIN=${MARS_BIN}/SimilarityScore
+	PAR="1024 256"
+	;;
+wc)
+	echo "generating data..."
+	for ((i=0; i<1024; i++)) do
+		cat ${MARS_DATA}/WC_BIN/sample >> data
+	done
+	BIN=${MARS_BIN}/WordCount
+	IDATA="data"
+	;;
+*)
+	echo "Invalid benchmark name!!"
+	;;
+esac
+
+echo "${BIN} ${IDATA} ${ODATA} ${PAR}"
+${BIN} ${IDATA} ${ODATA} ${PAR}
