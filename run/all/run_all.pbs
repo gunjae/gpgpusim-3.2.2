@@ -16,6 +16,16 @@ SDK_BIN=~/workspace/gpgpu-bench/sdk4/bin/linux/release
 MARS_BIN=~/workspace/gpgpu-bench/Mars/bin
 MARS_DATA=~/workspace/gpgpu-bench/Mars/sample_apps/BIN_TMPL
 
+POLYBENCH_DIR=~/workspace/gpgpu-bench/PolyBench-ACC/CUDA
+POLYBENCH_BIN=~/workspace/gpgpu-bench/PolyBench-ACC/CUDA
+
+FINANCEBENCH_DIR=~/workspace/gpgpu-bench/FinanceBench
+FINANCEBENCH_BIN=~/workspace/gpgpu-bench/FinanceBench
+
+SHOC_DIR=~/workspace/gpgpu-bench/shoc
+SHOC_BIN=~/workspace/gpgpu-bench/shoc/bin
+SHOC_DATA=~/workspace/gpgpu-bench/shoc/bin
+
 BIN=""
 DSET=""
 IDATA=""
@@ -241,6 +251,9 @@ eig)
 hst)
 	BIN="${SDK_BIN}/histogram"
 	;;
+mam)
+	BIN="${SDK_BIN}/matrixMul"
+	;;
 mgs)
 	BIN="${SDK_BIN}/mergeSort"
 	;;
@@ -338,6 +351,143 @@ wc)
 	done
 	BIN=${MARS_BIN}/WordCount
 	IDATA="data"
+	;;
+cor)
+	BIN=${POLYBENCH_BIN}/datamining/correlation/correlation.exe
+	;;
+cov)
+	BIN=${POLYBENCH_BIN}/datamining/covariance/covariance.exe
+	;;
+2mm)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/2mm/2mm.exe
+	;;
+3mm)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/3mm/3mm.exe
+	;;
+atx)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/atax/atax.exe
+	;;
+bic)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/bicg/bicg.exe
+	;;
+dit)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/doitgen/doitgen.exe
+	;;
+gmm)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/gemm/gemm.exe
+	;;
+gmv)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/gemver/gemver.exe
+	;;
+gsm)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/gesummv/gesummv.exe
+	;;
+mvt)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/mvt/mvt.exe
+	;;
+syr)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/syrk/syrk.exe
+	;;
+sy2)
+	BIN=${POLYBENCH_BIN}/linear-algebra/kernels/syr2k/syr2k.exe
+	;;
+grm)
+	BIN=${POLYBENCH_BIN}/linear-algebra/solvers/gramschmidt/gramschmidt.exe
+	;;
+lu)
+	BIN=${POLYBENCH_BIN}/linear-algebra/solvers/lu/lu.exe
+	;;
+adi)
+	BIN=${POLYBENCH_BIN}/stencils/adi/adi.exe
+	;;
+cv2)
+	BIN=${POLYBENCH_BIN}/stencils/convolution-2d/2DConvolution.exe
+	;;
+cv3)
+	BIN=${POLYBENCH_BIN}/stencils/convolution-3d/3DConvolution.exe
+	;;
+fdt)
+	BIN=${POLYBENCH_BIN}/stencils/fdtd-2d/fdtd2d.exe
+	;;
+jc1)
+	BIN=${POLYBENCH_BIN}/stencils/jacobi-1d-imper/jacobi1D.exe
+	;;
+jc2)
+	BIN=${POLYBENCH_BIN}/stencils/jacobi-2d-imper/jacobi2D.exe
+	;;
+blc)
+	BIN=${FINANCEBENCH_BIN}/Black-Scholes/CUDA/blackScholesEngine.exe
+	;;
+bne)
+	BIN=${FINANCEBENCH_BIN}/Bonds/CUDA/bondsEngine.exe
+	;;
+mce)
+	BIN=${FINANCEBENCH_BIN}/Monte-Carlo/CUDA/monteCarloEngine.exe
+	;;
+rpe)
+	BIN=${FINANCEBENCH_BIN}/Repo/CUDA/repoEngine.exe
+	;;
+bf2)
+	BIN=${SHOC_BIN}/EP/CUDA/BFS
+	;;
+fft)
+	BIN=${SHOC_BIN}/EP/CUDA/FFT
+	;;
+gem)
+	BIN=${SHOC_BIN}/EP/CUDA/GEMM
+#	PAR="-v"
+	;;
+md)
+	BIN=${SHOC_BIN}/EP/CUDA/MD
+#	PAR="-v"
+	;;
+md5)
+	BIN=${SHOC_BIN}/EP/CUDA/MD5Hash
+#	PAR="-v"
+	;;
+nen)
+	BIN=${SHOC_BIN}/EP/CUDA/NeuralNet
+#	PAR="-v"
+	;;
+rdc)
+	BIN=${SHOC_BIN}/EP/CUDA/Reduction
+#	PAR="-v"
+	;;
+s3d)
+	BIN=${SHOC_BIN}/EP/CUDA/S3D
+#	PAR="-v"
+	;;
+sca)
+	BIN=${SHOC_BIN}/EP/CUDA/Scan
+#	PAR="-v"
+	;;
+sor)
+	BIN=${SHOC_BIN}/EP/CUDA/Sort
+#	PAR="-v"
+	;;
+spv)
+	BIN=${SHOC_BIN}/EP/CUDA/Spmv
+#	PAR="-v"
+	;;
+trd)
+	BIN=${SHOC_BIN}/EP/CUDA/Triad
+#	PAR="-v"
+	;;
+qtc)
+	BIN=${SHOC_BIN}/TP/CUDA/QTC
+#	PAR="-v"
+	;;
+rdt)
+	BIN=${SHOC_BIN}/TP/CUDA/Reduction
+#	PAR="-v"
+	;;
+sct)
+	BIN=${SHOC_BIN}/TP/CUDA/Scan
+#	PAR="-v"
+	;;
+stn)
+	BIN=${SHOC_BIN}/TP/CUDA/Stencil2D
+#	PAR="-v"
 	;;
 *)
 	echo "Invalid benchmark name!!"

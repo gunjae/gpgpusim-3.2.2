@@ -9,7 +9,7 @@ BN1="BFS CP LIB LPS MUM NQU RAY STO WP"
 BN2="bpr bfs gaf gas hsp lud pff pth htw kmn"
 BN3="bf1 cut his lbm mrg mrq sad sge spm ste tpc"
 #BN4="alt asy blk cnt cnv dct dxt eig hst mca red scn sbq spd tfr vad wal"
-BN4="alt asy bin blk cnv cnt dct dxt eig hst mam mst mca qsr red spd scn sao sbq tfr vad wal"
+BN4="alt asy bin blk cnv cnt dct dxt eig hst mst mca qsr red spd scn sao sbq tfr vad wal"
 #BN4="alt asy bin blk cnv cnt dct dxt eig hst mgs mst mca qsr red spd scn sao sbq snt tfr txp vad wal"
 BN5="ii km pvc pvr sm ss wc"
 
@@ -22,7 +22,7 @@ BENCH_LIST="${BN1} ${BN2} ${BN3} ${BN4} ${BN5}"
 #CONFIG_LIST="gto lrr 2lv"
 #CONFIG_LIST="c01_w48 c02_w48 c03_w48 c04_w48 c05_w48 c06_w48 c07_w48 c08_w48 c09_w48 c10_w48 c11_w48 c12_w48 c13_w48 c14_w48 c15_w48 c16_w48"
 #CONFIG_LIST="gto_sc1_wc1 lrr_sc1_wc1 2lv_sc1_wc1"
-CONFIG_LIST="2lv"
+CONFIG_LIST="gto_sc1"
 #CONFIG_LIST="gto_sc1_as8 lrr_sc1_as8 2lv_sc1_as8"
 #CONFIG_LIST="gto_sc1_mshr16 lrr_sc1_mshr16 2lv_sc1_mshr16"
 #CONFIG_LIST="gto_sc1_mshr64 lrr_sc1_mshr64 2lv_sc1_mshr64"
@@ -32,7 +32,7 @@ CONFIG_LIST="2lv"
 #CONFIG_LIST="gto_mshr32 lrr_mshr32 2lv_mshr32 gto_mshr64 lrr_mshr64 2lv_mshr64"
 
 ## necessary to modify this information
-RUN_DATE="20141210"
+RUN_DATE="20141026"
 DST_DIR="RES_${RUN_DATE}"
 RUN_DIR="RUN"
 CMPS_FILE="${PWD##*/}_${RUN_DATE}.tar.gz"
@@ -70,11 +70,6 @@ for i in ${BENCH_LIST}; do
 		DST_FILE=${DST_DIR}/${i}_${j}_WarpTime_${RUN_DATE}.dat
 		echo "grep GK_WarpEnd ${RUN_DIR}/run_${i}.pbs.e* >> ${DST_FILE}"
 		grep GK_WarpEnd ${RUN_DIR}/run_${i}.pbs.e* >> ${DST_FILE}
-
-		## Load divergency data
-		DST_FILE=${DST_DIR}/${i}_${j}_LdDivr_${RUN_DATE}.dat
-		echo "grep GK_LdDivr ${RUN_DIR}/run_${i}.pbs.e* >> ${DST_FILE}"
-		grep GK_LdDivr ${RUN_DIR}/run_${i}.pbs.e* >> ${DST_FILE}
 		
 #		## LD issue data
 #		for k in ${MEM_SPACE}; do

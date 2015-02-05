@@ -1,0 +1,7 @@
+#!/bin/bash
+#*** The "#PBS" lines must come before any non-blank non-comment lines ***
+#PBS -l walltime=100:00:00,nodes=1:ppn=1
+
+WORKSPACE=$PBS_O_WORKDIR
+echo ${WORKSPACE}
+
