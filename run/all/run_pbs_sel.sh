@@ -8,28 +8,28 @@ CONFIG_DIR=~/workspace/gpgpu-pac/run/config
 
 ## list of benchmarks to be simulated
 #BENCH_LIST="AES BFS CP MUM RAY"
-BN1="BFS CP LIB LPS MUM NQU RAY STO WP"
-BN2="bpr bfs gaf gas hsp lud pff pth htw kmn"
+BN1="LPS MUM"
+BN2="bpr bfs hsp htw"
 BN3="cut his lbm mrg mrq sad sge spm ste tpc"
 #BN3="bf1 cut his lbm mrg mrq sad sge spm ste tpc"
 #BN4="alt asy blk cnt cnv dct dxt eig hst mca red scn sbq spd tfr vad wal"
-BN4="alt asy bin blk cnv cnt dct dxt eig hst mam mca red spd scn sao sbq tfr vad wal"
+BN4="dct mam spd wal"
 #BN4="alt asy bin blk cnv cnt dct dxt eig hst mgs mst mca qsr red spd scn sao sbq snt tfr vad wal"
 #BN4="alt asy bin blk cnv cnt dct dxt eig hst mgs mst mca qsr red spd scn sao sbq snt tfr txp vad wal"
-BN5="ii km pvc pvr sm ss wc"
+BN5="ii km pvc pvr ss"
 #BN5="ii km mm pvc pvr sm ss wc"
 BN6="cor cov 2mm 3mm atx bic dit gmm gmv gsm mvt syr sy2 grm lu adi cv2 cv3 fdt jc1 jc2"
 BN7="blc bne mce rpe"
 BN8="bf2 fft md md5 rdc s3d sca sor spv trd qtc rdt sct stn"
 
 BENCH_LIST="${BN1} ${BN2} ${BN3} ${BN4} ${BN5} ${BN6} ${BN7} ${BN8}"
-#BENCH_LIST="${BN8}"
+#BENCH_LIST="WP"
 
 ## list of benchmarks which will end in long time
 BENCH_LONG="alt bf1 bin blk cnt cnv cut dxt eig hst htw lbm km kmn ii mm mrg pvc pvr red ss scn ste tpc txp wc cor cov 2mm atx gmv gsm mvt syr sy2 grm lu fdt blc bne mce rpe spv trd qtc rdt sct stn"
 
 ## list of configs to be simulated
-CONFIG_LIST="2lv"
+CONFIG_LIST="2lv_sc1"
 #CONFIG_LIST="gto_sc1 lrr_sc1 2lv_sc1"
 #CONFIG_LIST="gto lrr 2lv"
 #CONFIG_LIST="gto_sc1_dlat001 lrr_sc1_dlat001 2lv_sc1_dlat001"
