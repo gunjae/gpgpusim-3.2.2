@@ -339,6 +339,9 @@ void memory_stats_t::memlatstat_print( unsigned n_mem, unsigned gpu_mem_n_bk )
       for (i=0;i<n_mem ;i++ ) {
          printf("dram[%d]: ", i);
          for (j=0;j<gpu_mem_n_bk;j++ ) {
+			// gunjae: BUGFIX
+			totalbankaccesses[i][j] = totalbankreads[i][j] + totalbankwrites[i][j];
+			//
             l = totalbankreads[i][j];
             if (l < min_bank_accesses)
                min_bank_accesses = l;
