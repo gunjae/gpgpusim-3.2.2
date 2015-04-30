@@ -8,14 +8,14 @@
 # Environments
 
 # GPGPU-sim
-GPGPUSIM_DIR=~/workspace/gpgpu-pac
+GPGPUSIM_DIR=~/workspace/gpgpu-msh
 
 # Configs
-CONFIG_DIR=~/workspace/gpgpu-pac/run/config
+CONFIG_DIR=~/workspace/gpgpu-msh/run/config
 #CONFIG_LIST="gto lrr 2lv"
 CONFIG_LIST="gto"
 #CONFIG_LIST="2lv_sc1 gto_sc1 lrr_sc1"
-BENCH_LIST="jc2"
+BENCH_LIST="jc1"
 
 # Running directory
 TODAY=`date +%Y%m%d`

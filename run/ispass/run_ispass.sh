@@ -20,7 +20,7 @@ case "$BENCH" in
 	BIN="${ISPASS_BIN}/AES"
 	IDATA="e 128 ${ISPASS_DIR}/AES/data/output.bmp ${ISPASS_DIR}/AES/data/key128.txt"
 	;;
-	BFS)
+	BFI)
 	BIN="${ISPASS_BIN}/BFS"
 	IDATA="${ISPASS_DIR}/BFS/data/graph4096.txt"
 	;;

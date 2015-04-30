@@ -7,28 +7,25 @@
 CONFIG_DIR=~/workspace/gpgpu-msh/run/config
 
 ## list of benchmarks to be simulated
-#BENCH_LIST="bpr bfs gaf gas hsp lud pff pth sr1"
-#BENCH_LIST="bpr bfs btr dwt gaf gas htw hsp hsr kmn lud mmg myo nn nw pfn pff pth sr1 sr2 scg"
-#BENCH_LIST="bpr bfs btr dwt gaf gas htw hsp hsr kmn lud myo nw pff pth sr1 sr2 scg"
-#BENCH_LIST="scg"
-#BENCH_LIST="bpr bfs gaf gas hsp lud pff pth"
-BENCH_LIST="lav"
+#BENCH_LIST="bf1 cut his lbm mrg mrq sad sge spm ste tpc"
+#BENCH_LIST="bf1 cut his mrq sad sge spm"
+#BENCH_LIST="cut his mrq sad sge spm"
+#BENCH_LIST="aps ccl ccn ccd clu gco gcu mis mst"
+BENCH_LIST="mis"
 
-BENCH_LONG="gaf htw kmn scg"
+BENCH_LONG="aps gcu ccn ccd sss"
 
+#CONFIG_LIST="gto lrr 2lv"
+#CONFIG_LIST="gto_sc1_dlat001 lrr_sc1_dlat001 2lv_sc1_dlat001"
+#CONFIG_LIST="c01_w48 c02_w48 c03_w48 c04_w48 c05_w48 c06_w48 c07_w48 c08_w48 c09_w48 c10_w48 c11_w48 c12_w48 c13_w48 c14_w48 c15_w48 c16_w48"
+CONFIG_LIST="gto"
 #CONFIG_LIST="mc_fifo mc_frfcfs"
 #CONFIG_LIST="gto_dl11 lrr_dl11 2lv_dl11 gto_dl12 lrr_dl12 2lv_dl12"
 #CONFIG_LIST="gto_ml1 lrr_ml1 2lv_ml1 gto_ml2 lrr_ml2 2lv_ml2"
 #CONFIG_LIST="gto_pfm lrr_pfm 2lv_pfm"
-#CONFIG_LIST="gto lrr 2lv"
-#CONFIG_LIST="c01_w48 c02_w48 c03_w48 c04_w48 c05_w48 c06_w48 c07_w48 c08_w48 c09_w48 c10_w48 c11_w48 c12_w48 c13_w48 c14_w48 c15_w48 c16_w48"
-CONFIG_LIST="gto"
-#CONFIG_LIST="gto_sc1_mshr64 lrr_sc1_mshr64 2lv_sc1_mshr64"
-#CONFIG_LIST="gto_sc1_mshr16 lrr_sc1_mshr16 2lv_sc1_mshr16"
-#CONFIG_LIST="gto_sc1_wc1 lrr_sc1_wc1 2lv_sc1_wc1"
-#CONFIG_LIST="c01_gto_sc1 c01_lrr_sc1 c01_2lv_sc1"
-#CONFIG_LIST="gto_sc1_dlat001 lrr_sc1_dlat001 2lv_sc1_dlat001"
+#CONFIG_LIST="gto_byp lrr_byp 2lv_byp"
 #CONFIG_LIST="gto gto_w08 gto_w16 gto_w32"
+#CONFIG_LIST="gto_mshr32 lrr_mshr32 2lv_mshr32 gto_mshr64 lrr_mshr64 2lv_mshr64"
 
 function list_contains {
 	local list="$1"
@@ -47,7 +44,6 @@ if [ -n "$1" ]; then
 else
     TODAY=`date +%Y%m%d`
 fi
-#TODAY=`date +%Y%m%d`
 RUN_DIR="RUN"
 
 for i in ${BENCH_LIST}; do
@@ -72,7 +68,7 @@ for i in ${BENCH_LIST}; do
 		cat run_header.pbs > ./${RUN_DIR}/run_${i}.pbs
 		cat run_gpuenv.pbs >> ./${RUN_DIR}/run_${i}.pbs
 		echo "BENCH=${i}" >> ./${RUN_DIR}/run_${i}.pbs
-		cat run_rodinia.pbs >> ./${RUN_DIR}/run_${i}.pbs
+		cat run_graphbench.pbs >> ./${RUN_DIR}/run_${i}.pbs
 		echo " + Run ... Good luck!!"
 		(cd ${RUN_DIR} && qsub run_${i}.pbs)
 	done

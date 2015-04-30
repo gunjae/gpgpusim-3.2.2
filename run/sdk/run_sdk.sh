@@ -54,7 +54,7 @@ hst)
 mrg)
 	BIN="${SDK_BIN}/mergeSort"
 	;;
-mst)
+mt)
 	cp ${SDK_DIR}/MersenneTwister/data/* .
 	BIN="${SDK_BIN}/MersenneTwister"
 	;;

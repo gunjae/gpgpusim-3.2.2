@@ -8,10 +8,10 @@
 # Environments
 
 # GPGPU-sim
-GPGPUSIM_DIR=~/workspace/gpgpu-pac
+GPGPUSIM_DIR=~/workspace/gpgpu-msh
 
 # Configs
-CONFIG_DIR=~/workspace/gpgpu-pac/run/config
+CONFIG_DIR=~/workspace/gpgpu-msh/run/config
 #CONFIG_LIST="gto lrr 2lv"
 CONFIG_LIST="gto"
 #BENCH_LIST="BFS LPS MUM NQU RAY WP"

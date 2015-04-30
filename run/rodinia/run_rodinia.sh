@@ -6,9 +6,9 @@ if [ ! -n "$1" ]; then
 fi
 
 BENCH=$1
-RODINIA_DIR=~/workspace/gpgpu-bench/rodinia_2.4/cuda
-RODINIA_DATA=~/workspace/gpgpu-bench/rodinia_2.4/data
-RODINIA_BIN=~/workspace/gpgpu-bench/rodinia_2.4/bin/linux/cuda
+RODINIA_DIR=~/workspace/gpgpu-bench/rodinia_3.0/cuda
+RODINIA_DATA=~/workspace/gpgpu-bench/rodinia_3.0/data
+RODINIA_BIN=~/workspace/gpgpu-bench/rodinia_3.0/bin/linux/cuda
 
 BIN=""
 DSET=""
@@ -25,9 +25,18 @@ case "$BENCH" in
 	BIN="${RODINIA_BIN}/bfs"
 	IDATA="${RODINIA_DATA}/bfs/graph1MW_6.txt"
 	;;
+	btr)
+	BIN="${RODINIA_BIN}/b+tree"
+	IDATA="file ${RODINIA_DATA}/b+tree/mil.txt command ${RODINIA_DATA}/b+tree/command.txt"
+	;;
+	dwt)
+	BIN="${RODINIA_BIN}/dwt2d"
+	IDATA="${RODINIA_DATA}/dwt2d/rgb.bmp"
+	PAR="-d 1024x1024 -f -5 -l 3"
+	;;
 	gaf)
 	BIN="${RODINIA_BIN}/gaussian"
-	IDATA="-f ${RODINIA_DATA}/gaussian/matrix4.txt"
+	IDATA="-f ${RODINIA_DATA}/gaussian/matrix1024.txt"
 	;;
 	gas)
 	BIN="${RODINIA_BIN}/gaussian"
@@ -36,20 +45,57 @@ case "$BENCH" in
 	htw)
 	BIN="${RODINIA_BIN}/heartwall"
 	IDATA="${RODINIA_DATA}/heartwall/test.avi"
-	PAR="5"
+	PAR="20"
+	#PAR="5"
 	;;
 	hsp)
 	BIN="${RODINIA_BIN}/hotspot"
-	IDATA="512 2 2 ${RODINIA_DATA}/hotspot/temp_512"
-	ODATA="${RODINIA_DATA}/hotspot/power_512 output.out"
+	IDATA="512 2 2 ${RODINIA_DATA}/hotspot/temp_512 ${RODINIA_DATA}/hotspot/power_512"
+	ODATA="output.out"
+	;;
+	hsr)
+	BIN="${RODINIA_BIN}/hybridsort"
+	IDATA="${RODINIA_DATA}/hybridsort/500000.txt"
+	#PAR="r"
 	;;
 	kmn)
 	BIN="${RODINIA_BIN}/kmeans"
 	IDATA="-o -i ${RODINIA_DATA}/kmeans/kdd_cup" 
 	;;
+	lav)
+	BIN="${RODINIA_BIN}/lavaMD"
+	PAR="-boxes1d 10" 
+	;;
 	lud)
 	BIN="${RODINIA_BIN}/lud_cuda"
-	PAR="-s 256 -v"
+	IDATA="-i ${RODINIA_DATA}/lud/2045.dat" 
+	#PAR="-s 256 -v"
+	;;
+	mmg)
+	BIN="${RODINIA_BIN}/mummergpu"
+	IDATA="${RODINIA_DATA}/mummergpu/NC_003997.fna ${RODINIA_DATA}/mummergpu/NC_003997_q100bp.fna"
+	#ODATA="> NC_00399.out"
+	;;
+	myo)
+	BIN="${RODINIA_BIN}/myocyte"
+	PAR="100 1 0"
+	;;
+	nn)
+	echo "${RODINIA_DATA}/nn/cane4_0.db" >> filelist_4
+	echo "${RODINIA_DATA}/nn/cane4_1.db" >> filelist_4
+	echo "${RODINIA_DATA}/nn/cane4_2.db" >> filelist_4
+	echo "${RODINIA_DATA}/nn/cane4_3.db" >> filelist_4
+	BIN="${RODINIA_BIN}/nn"
+	IDATA="filelist_4"
+	PAR="-r 5 -lat 30 -lng 90"
+	;;
+	nw)
+	BIN="${RODINIA_BIN}/needle"
+	PAR="2048 10"
+	;;
+	pfn)
+	BIN="${RODINIA_BIN}/particlefilter_naive"
+	PAR="-x 128 -y 128 -z 10 -np 1000"
 	;;
 	pff)
 	BIN="${RODINIA_BIN}/particlefilter_float"
@@ -63,10 +109,15 @@ case "$BENCH" in
 	BIN="${RODINIA_BIN}/srad_v1"
 	PAR="100 0.5 502 458"
 	;;
+	sr2)
+	BIN="${RODINIA_BIN}/srad_v2"
+	PAR="2048 2048 0 127 0 127 0.5 2"
+	;;
 	scg)
 	BIN="${RODINIA_BIN}/sc_gpu"
 	IDATA="10 20 256 65536 65536 1000 none"
 	ODATA="output.txt"
+	PAR="1"
 	;;
 	*)
 	echo "Invalid benchmark name!!!"

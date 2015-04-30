@@ -1,3 +1,12 @@
+#!/bin/bash
+
+if [ ! -n "$1" ]; then
+	echo "usage: $0 BENCHNAME"
+	exit 0
+fi
+
+BENCH=$1
+
 ISPASS_DIR=~/workspace/gpgpu-bench/ispass2009
 ISPASS_BIN=~/workspace/gpgpu-bench/ispass2009/bin/release
 
