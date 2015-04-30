@@ -111,6 +111,11 @@ public:
    const memory_config *get_mem_config(){return m_mem_config;}
 
    unsigned get_num_flits(bool simt_to_mem);
+
+   // BUGFIX: member function to set/reset m_touch_dram
+   void set_touch_dram() { m_touch_dram = true; }
+   bool is_touch_dram() const { return m_touch_dram; }
+   //
 private:
    // request source information
    unsigned m_request_uid;
@@ -142,6 +147,9 @@ private:
 
    const class memory_config *m_mem_config;
    unsigned icnt_flit_size;
+
+   // BUGFIX: flag indicating whether memory request touches DRAM
+   bool m_touch_dram;
 };
 
 #endif

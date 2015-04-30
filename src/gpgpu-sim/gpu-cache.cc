@@ -348,7 +348,7 @@ bool was_read_sent( const std::list<cache_event> &events )
     return false;
 }
 /****************************************************************** MSHR ******************************************************************/
-
+/// GUNJAE: MSHR access functions
 /// Checks if there is a pending request to the lower memory level already
 bool mshr_table::probe( new_addr_type block_addr ) const{
     table::const_iterator a = m_data.find(block_addr);
@@ -423,6 +423,10 @@ cache_stats::cache_stats(){
     m_cache_port_available_cycles = 0; 
     m_cache_data_port_busy_cycles = 0; 
     m_cache_fill_port_busy_cycles = 0; 
+	// gunjae: add more categories for reservation fail cases
+	m_res_fails_tag = 0;
+	m_res_fails_mshr = 0;
+	m_res_fails_misq = 0;
 }
 
 void cache_stats::clear(){
@@ -435,6 +439,10 @@ void cache_stats::clear(){
     m_cache_port_available_cycles = 0; 
     m_cache_data_port_busy_cycles = 0; 
     m_cache_fill_port_busy_cycles = 0; 
+	// gunjae: add more categories for reservation fail cases
+	m_res_fails_tag = 0;
+	m_res_fails_mshr = 0;
+	m_res_fails_misq = 0;
 }
 
 void cache_stats::inc_stats(int access_type, int access_outcome){
@@ -445,6 +453,15 @@ void cache_stats::inc_stats(int access_type, int access_outcome){
         assert(0 && "Unknown cache access type or access outcome");
 
     m_stats[access_type][access_outcome]++;
+}
+
+// gunjae: increase reservation fail stats
+void cache_stats::inc_res_fails(enum cache_request_status probe, enum cache_request_status access)
+{
+	if (probe == RESERVATION_FAIL)
+		m_res_fails_tag++;
+	else if (access == RESERVATION_FAIL)
+		m_res_fails_mshr++;
 }
 
 enum cache_request_status cache_stats::select_stats_status(enum cache_request_status probe, enum cache_request_status access) const {
@@ -492,7 +509,11 @@ cache_stats cache_stats::operator+(const cache_stats &cs){
     ret.m_cache_port_available_cycles = m_cache_port_available_cycles + cs.m_cache_port_available_cycles; 
     ret.m_cache_data_port_busy_cycles = m_cache_data_port_busy_cycles + cs.m_cache_data_port_busy_cycles; 
     ret.m_cache_fill_port_busy_cycles = m_cache_fill_port_busy_cycles + cs.m_cache_fill_port_busy_cycles; 
-    return ret;
+    // gunjae
+	ret.m_res_fails_tag = m_res_fails_tag + cs.m_res_fails_tag;
+	ret.m_res_fails_mshr = m_res_fails_mshr + cs.m_res_fails_mshr;
+	ret.m_res_fails_misq = m_res_fails_misq + cs.m_res_fails_misq;
+	return ret;
 }
 
 cache_stats &cache_stats::operator+=(const cache_stats &cs){
@@ -507,6 +528,10 @@ cache_stats &cache_stats::operator+=(const cache_stats &cs){
     m_cache_port_available_cycles += cs.m_cache_port_available_cycles; 
     m_cache_data_port_busy_cycles += cs.m_cache_data_port_busy_cycles; 
     m_cache_fill_port_busy_cycles += cs.m_cache_fill_port_busy_cycles; 
+	// gunjae
+	m_res_fails_tag += cs.m_res_fails_tag;
+	m_res_fails_mshr += cs.m_res_fails_mshr;
+	m_res_fails_misq += cs.m_res_fails_misq;
     return *this;
 }
 
@@ -587,6 +612,10 @@ void cache_stats::get_sub_stats(struct cache_sub_stats &css) const{
     t_css.port_available_cycles = m_cache_port_available_cycles; 
     t_css.data_port_busy_cycles = m_cache_data_port_busy_cycles; 
     t_css.fill_port_busy_cycles = m_cache_fill_port_busy_cycles; 
+	// gunjae
+	t_css.res_fails_tag = m_res_fails_tag;
+	t_css.res_fails_mshr = m_res_fails_mshr;
+	t_css.res_fails_misq = m_res_fails_misq;
 
     css = t_css;
 }
@@ -680,6 +709,7 @@ bool baseline_cache::bandwidth_management::fill_port_free() const
     return (m_fill_port_occupied_cycles == 0); 
 }
 
+/// GUNJAE: pop front from miss queue, deliver to icnt
 /// Sends next request to lower level of memory
 void baseline_cache::cycle(){
     if ( !m_miss_queue.empty() ) {
@@ -765,8 +795,10 @@ void baseline_cache::send_read_request(new_addr_type addr, new_addr_type block_a
 
         m_mshrs.add(block_addr,mf);
         m_extra_mf_fields[mf] = extra_mf_fields(block_addr,cache_index, mf->get_data_size());
+		// GUNJAE: data size is adjusted to line size of cache
         mf->set_data_size( m_config.get_line_sz() );
-        m_miss_queue.push_back(mf);
+        // GUNJAE: add request in miss queue
+		m_miss_queue.push_back(mf);
         mf->set_status(m_miss_queue_status,time);
         if(!wa)
         	events.push_back(READ_REQUEST_SENT);
@@ -778,13 +810,14 @@ void baseline_cache::send_read_request(new_addr_type addr, new_addr_type block_a
 /// Sends write request to lower level memory (write or writeback)
 void data_cache::send_write_request(mem_fetch *mf, cache_event request, unsigned time, std::list<cache_event> &events){
     events.push_back(request);
+    // GUNJAE: add request in miss queue
     m_miss_queue.push_back(mf);
     mf->set_status(m_miss_queue_status,time);
 }
 
 
 /****** Write-hit functions (Set by config file) ******/
-
+/// GUNJAE: status is decided here
 /// Write-back hit: Mark block as modified
 cache_request_status data_cache::wr_hit_wb(new_addr_type addr, unsigned cache_index, mem_fetch *mf, unsigned time, std::list<cache_event> &events, enum cache_request_status status ){
 	new_addr_type block_addr = m_config.block_addr(addr);
@@ -797,9 +830,11 @@ cache_request_status data_cache::wr_hit_wb(new_addr_type addr, unsigned cache_in
 
 /// Write-through hit: Directly send request to lower level memory
 cache_request_status data_cache::wr_hit_wt(new_addr_type addr, unsigned cache_index, mem_fetch *mf, unsigned time, std::list<cache_event> &events, enum cache_request_status status ){
-	if(miss_queue_full(0))
+	if(miss_queue_full(0)) {
+		// gunjae: reservation fail by lack of missq
+		m_stats.m_res_fails_misq++;
 		return RESERVATION_FAIL; // cannot handle request this cycle
-
+	}
 	new_addr_type block_addr = m_config.block_addr(addr);
 	m_tag_array->access(block_addr,time,cache_index); // update LRU state
 	cache_block_t &block = m_tag_array->get_block(cache_index);
@@ -813,9 +848,11 @@ cache_request_status data_cache::wr_hit_wt(new_addr_type addr, unsigned cache_in
 
 /// Write-evict hit: Send request to lower level memory and invalidate corresponding block
 cache_request_status data_cache::wr_hit_we(new_addr_type addr, unsigned cache_index, mem_fetch *mf, unsigned time, std::list<cache_event> &events, enum cache_request_status status ){
-	if(miss_queue_full(0))
+	if(miss_queue_full(0)) {
+		// gunjae: reservation fail by lack of missq
+		m_stats.m_res_fails_misq++;
 		return RESERVATION_FAIL; // cannot handle request this cycle
-
+	}
 	// generate a write-through/evict
 	cache_block_t &block = m_tag_array->get_block(cache_index);
 	send_write_request(mf, WRITE_REQUEST_SENT, time, events);
@@ -854,8 +891,11 @@ data_cache::wr_miss_wa( new_addr_type addr,
     if(miss_queue_full(2) 
         || (!(mshr_hit && mshr_avail) 
         && !(!mshr_hit && mshr_avail 
-        && (m_miss_queue.size() < m_config.m_miss_queue_size))))
-        return RESERVATION_FAIL;
+        && (m_miss_queue.size() < m_config.m_miss_queue_size)))) {
+        if ( miss_queue_full(2) ) m_stats.m_res_fails_misq++;
+		else m_stats.m_res_fails_mshr++;
+		return RESERVATION_FAIL;
+	}
 
     send_write_request(mf, WRITE_REQUEST_SENT, time, events);
     // Tries to send write allocate request, returns true on success and false on failure
@@ -896,7 +936,9 @@ data_cache::wr_miss_wa( new_addr_type addr,
         }
         return MISS;
     }
-
+	
+	// gunjae: if do_miss==false, it means the memory request cannot be assigned to MSHR
+	m_stats.m_res_fails_mshr++;
     return RESERVATION_FAIL;
 }
 
@@ -909,9 +951,11 @@ data_cache::wr_miss_no_wa( new_addr_type addr,
                            std::list<cache_event> &events,
                            enum cache_request_status status )
 {
-    if(miss_queue_full(0))
+    if(miss_queue_full(0)) {
+		// gunjae: reservation fail by lack of miss queue
+		m_stats.m_res_fails_misq++;
         return RESERVATION_FAIL; // cannot handle request this cycle
-
+	}
     // on miss, generate write through (no write buffering -- too many threads for that)
     send_write_request(mf, WRITE_REQUEST_SENT, time, events);
 
@@ -953,10 +997,12 @@ data_cache::rd_miss_base( new_addr_type addr,
                           unsigned time,
                           std::list<cache_event> &events,
                           enum cache_request_status status ){
-    if(miss_queue_full(1))
+    if(miss_queue_full(1)) {
         // cannot handle request this cycle
         // (might need to generate two requests)
-        return RESERVATION_FAIL; 
+        m_stats.m_res_fails_misq++;
+		return RESERVATION_FAIL; 
+	}
 
     new_addr_type block_addr = m_config.block_addr(addr);
     bool do_miss = false;
@@ -977,6 +1023,8 @@ data_cache::rd_miss_base( new_addr_type addr,
     }
         return MISS;
     }
+	// gunjae: if do_miss==false, it means the memory request cannot be assigned to MSHR
+	m_stats.m_res_fails_mshr++;
     return RESERVATION_FAIL;
 }
 
@@ -1004,15 +1052,23 @@ read_only_cache::access( new_addr_type addr,
             send_read_request(addr, block_addr, cache_index, mf, time, do_miss, events, true, false);
             if(do_miss)
                 cache_status = MISS;
-            else
+            else {
                 cache_status = RESERVATION_FAIL;
-        }else{
+				// gunjae
+				m_stats.m_res_fails_mshr++;
+			}
+        }else {
             cache_status = RESERVATION_FAIL;
+			// gunjae
+			m_stats.m_res_fails_misq++;
         }
     }
 
     m_stats.inc_stats(mf->get_access_type(), m_stats.select_stats_status(status, cache_status));
-    return cache_status;
+    // gunjae: increase reservation fail stats
+	if ( status == RESERVATION_FAIL ) m_stats.m_res_fails_tag++;
+	//m_stats.inc_res_fails( status, cache_status );
+	return cache_status;
 }
 
 //! A general function that takes the result of a tag_array probe
@@ -1034,6 +1090,7 @@ data_cache::process_tag_probe( bool wr,
     cache_request_status access_status = probe_status;
     if(wr){ // Write
         if(probe_status == HIT){
+			/// GUNJAE: if probe_status==HIT, access status is always HIT
             access_status = (this->*m_wr_hit)( addr,
                                       cache_index,
                                       mf, time, events, probe_status );
@@ -1058,6 +1115,7 @@ data_cache::process_tag_probe( bool wr,
     return access_status;
 }
 
+/// GUNJAE: this functions is called when cache is accessed in a SM
 // Both the L1 and L2 currently use the same access function.
 // Differentiation between the two caches is done through configuration
 // of caching policies.
@@ -1074,12 +1132,18 @@ data_cache::access( new_addr_type addr,
     bool wr = mf->get_is_write();
     new_addr_type block_addr = m_config.block_addr(addr);
     unsigned cache_index = (unsigned)-1;
-    enum cache_request_status probe_status
+    /// GUNJAE: probe status - if all sets are reserved, reservation fail
+	enum cache_request_status probe_status
         = m_tag_array->probe( block_addr, cache_index );
+	/// GUNJAE: access status - final status seen by a SM?
     enum cache_request_status access_status
         = process_tag_probe( wr, probe_status, addr, cache_index, mf, time, events );
     m_stats.inc_stats(mf->get_access_type(),
         m_stats.select_stats_status(probe_status, access_status));
+	// gunjae: increase reservation fail stats
+	if ( probe_status == RESERVATION_FAIL ) m_stats.m_res_fails_tag++;
+	//m_stats.inc_res_fails( probe_status, access_status );
+	/// GUNJAE: access_status is returned
     return access_status;
 }
 
@@ -1144,9 +1208,12 @@ enum cache_request_status tex_cache::access( new_addr_type addr, mem_fetch *mf,
         cache_status = HIT_RESERVED;
     }
     m_stats.inc_stats(mf->get_access_type(), m_stats.select_stats_status(status, cache_status));
-    return cache_status;
+    // gunjae: increase reservation fail stats
+	m_stats.inc_res_fails( status, cache_status );
+	return cache_status;
 }
 
+// GUNJAE: tex cache to icnt
 void tex_cache::cycle(){
     // send next request to lower level of memory
     if ( !m_request_fifo.empty() ) {

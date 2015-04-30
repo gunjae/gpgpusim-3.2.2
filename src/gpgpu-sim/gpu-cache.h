@@ -455,6 +455,11 @@ struct cache_sub_stats{
     unsigned long long data_port_busy_cycles; 
     unsigned long long fill_port_busy_cycles; 
 
+	// gunjae: add more stats for resrvation fails
+	unsigned long long res_fails_tag;	// reservation fail because all tags are occupied
+	unsigned long long res_fails_mshr;	// reservation fail because all MSHR are occupied
+	unsigned long long res_fails_misq;	// reservation fail because all miss queue are occupied
+
     cache_sub_stats(){
         clear();
     }
@@ -466,6 +471,10 @@ struct cache_sub_stats{
         port_available_cycles = 0; 
         data_port_busy_cycles = 0; 
         fill_port_busy_cycles = 0; 
+		// gunjae
+		res_fails_tag = 0;
+		res_fails_mshr = 0;
+		res_fails_misq = 0;
     }
     cache_sub_stats &operator+=(const cache_sub_stats &css){
         ///
@@ -478,6 +487,10 @@ struct cache_sub_stats{
         port_available_cycles += css.port_available_cycles; 
         data_port_busy_cycles += css.data_port_busy_cycles; 
         fill_port_busy_cycles += css.fill_port_busy_cycles; 
+		// gunjae
+		res_fails_tag += css.res_fails_tag;
+		res_fails_mshr += css.res_fails_mshr;
+		res_fails_misq += css.res_fails_misq;
         return *this;
     }
 
@@ -493,6 +506,10 @@ struct cache_sub_stats{
         ret.port_available_cycles = port_available_cycles + cs.port_available_cycles; 
         ret.data_port_busy_cycles = data_port_busy_cycles + cs.data_port_busy_cycles; 
         ret.fill_port_busy_cycles = fill_port_busy_cycles + cs.fill_port_busy_cycles; 
+		// gunjae
+		ret.res_fails_tag = res_fails_tag + cs.res_fails_tag;
+		ret.res_fails_mshr = res_fails_mshr + cs.res_fails_mshr;
+		ret.res_fails_misq = res_fails_misq + cs.res_fails_misq;
         return ret;
     }
 
@@ -521,6 +538,14 @@ public:
     void get_sub_stats(struct cache_sub_stats &css) const;
 
     void sample_cache_port_utility(bool data_port_busy, bool fill_port_busy); 
+
+	// gunjae
+	void inc_res_fails(enum cache_request_status probe, enum cache_request_status access);
+	
+	// gunjae: add mores stats
+	unsigned long long m_res_fails_tag;
+	unsigned long long m_res_fails_mshr;
+	unsigned long long m_res_fails_misq;
 private:
     bool check_valid(int type, int status) const;
 

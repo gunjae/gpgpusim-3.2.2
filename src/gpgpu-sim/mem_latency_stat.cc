@@ -144,7 +144,10 @@ unsigned memory_stats_t::memlatstat_done(mem_fetch *mf )
    assert(idx<32);
    mf_lat_table[idx]++;
    shader_mem_lat_log(mf->get_sid(), mf_latency);
-   mf_total_lat_table[mf->get_tlx_addr().chip][mf->get_tlx_addr().bk] += mf_latency;
+   // gunjae: BUGFIX - add dram bank latency table only when a request touches DRAM
+   if ( mf->is_touch_dram() )
+      mf_total_lat_table[mf->get_tlx_addr().chip][mf->get_tlx_addr().bk] += mf_latency;
+   //mf_total_lat_table[mf->get_tlx_addr().chip][mf->get_tlx_addr().bk] += mf_latency;
    if (mf_latency > max_mf_latency)
       max_mf_latency = mf_latency;
    return mf_latency;
@@ -181,6 +184,8 @@ void memory_stats_t::memlatstat_dram_access(mem_fetch *mf)
          totalbankreads[dram_id][bank]++;
       }
       mem_access_type_stats[mf->get_access_type()][dram_id][bank]++;
+	  // gunjae: BUGFIX: check if a request touches DRAM
+	  mf->set_touch_dram();
    }
    if (mf->get_pc() != (unsigned)-1) 
       ptx_file_line_stats_add_dram_traffic(mf->get_pc(), mf->get_data_size());
