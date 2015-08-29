@@ -1,0 +1,148 @@
+// *********************************************************
+//	Installing GPGPU-sim on linux
+//		- Gunjae Koo (gunjae.koo@gmail.com)
+// *********************************************************
+
+0. This installation guide is tested on Linux Mint 17.2 64-bits (Ubuntu 14.04 LTS)
+
+1. Install appropriate C/C++ compiler versions
+ - GPGPU-Sim is OK for gcc/g++ 4.4 or 4.5 versions. It was tested with the 4.5 version, but 4.4 is also OK
+	sudo apt-get install gcc-4.4
+	sudo apt-get install g++-4.4
+ - Replace the default compiler links (4.8 is the pre-installed version)
+	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.4 10
+	sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
+	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.4 10
+	sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
+	sudo update-alternatives --install /usr/bin/cc cc /usr/bin/gcc 30
+	sudo update-alternatives --set cc /usr/bin/gcc
+	sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++ 30
+	sudo update-alternatives --set c++ /usr/bin/g++
+ - Then, select the appropriate version
+	sudo update-alternatives --config gcc
+	sudo update-alternatives --config g++
+
+2. Install dependent libraries
+	sudo apt-get install libxi-dev libxmu-dev freeglut3-dev
+	sudo apt-get install libcuda1-346 libcudart5.5
+
+3. Install CUDA Toolkit and CUDA SDK (for NVCC)
+ - GPGPU-Sim supports upto 4.2 version of CUDA SDK and NVCC. So, try to install 4.2 version
+ - CUDA Toolkit and SDK version 4.2 is found in https://developer.nvidia.com/cuda-toolkit-42-archive
+	wget http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_4.2.9_linux_64_ubuntu11.04.run
+	wget http://developer.download.nvidia.com/compute/cuda/4_2/rel/sdk/gpucomputingsdk_4.2.9_linux.run
+	chmod 755 *.run
+ - Install CUDA Toolkit (for NVCC) in /usr/bin/cuda
+	./cudatoolkit_4.2.9_linux_64_ubuntu11.04.run
+ - Install CUDA SDK in ~/bin/NVIDIA_GPU_Computing_SDK4
+	./gpucomputingsdk_4.2.9_linux.run
+ - Add environment settings in .bashrc
+	PATH=$PATH:/usr/local/cuda/bin
+	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib
+	export CUDA_INSTALL_PATH=/usr/local/cuda
+	export NVIDIA_COMPUTE_SDK_LOCATION=~/bin/NVIDIA_GPU_Computing_SDK4
+
+4. Install GPGPU-Sim
+ - Install dependent packages
+ - For GPGPU-Sim
+	sudo apt-get install build-essential xutils-dev bison zlib1g-dev flex libglu1-mesa-dev
+ - For doxygen
+	sudo apt-get install doxygen graphviz
+ - For AerialVision
+	sudo apt-get install python-pmw python-ply python-numpy libpng12-dev python-matplotlib
+ - Get GPGPU-Sim distribution
+	git clone https://github.com/gpgpu-sim/gpgpu-sim_distribution.git
+ - Copile GPGPU-Sim
+	cd gpgpu-sim_distribution
+	source setup_environment
+	make
+
+5. Install benchmark applications and run GPGPU-Sim	
+ - After setup_environment is sourced in the GPGPU-Sim folder, GPGPU-Sim will be called when CUDA appication is executed
+ - Copy gpgpusim.config, config_fermi_islip.icnt and gpuwattch_gtx480.xml in the folder where the CUDA application exists
+ - Run the CUDA application
+
+
+/////////////////////////////////////////////////////////////////
+//	Installing GPGPU-Sim (old version)
+/////////////////////////////////////////////////////////////////
+
+0. This installation guide is tested on Linux Mint Maya (Ubuntu 12.04 LTS)
+
+1. Install NVIDIA GPU driver -> isn't required
+ - Add install repository and install the driver
+	sudo apt-add-repository ppa:ubuntu-x-swat/x-updates
+	sudo apt-get update
+	sudo apt-get install nvidia-current
+ - After installation, the CUDA library will be in /usr/lib/nvidia-current
+ - It is necessary to make symbolic link in /usr/lib
+	sudo ln -s /usr/lib/nvidia-current/libcuda.so /usr/lib/libcuda.so
+	sudo ln -s /usr/lib/nvidia-current/libcuda.so.1 /usr/lib/libcuda.so.1
+
+2. Install CUDA toolkit and computing SDK
+ - For current version (3.2.1) of GPGPU-sim, CUDA toolkit version 2, 3 and 4 are tested
+ - Download them from the NVIDIA site (https://developer.nvidia.com/cuda-downloads)
+ - Install .run pacakges (available most recent version is 4.0)
+ - Install the Debian package (.deb) -> not work for GPGPU-sim
+ - ARMv7 cross-compilation and profiling tool will be installed also
+
+3. Check installed packages
+ - Check nvcc
+	nvcc --version
+ - Install dependent libraries
+	sudo apt-get install freeglut3-dev
+	sudo apt-get install libxi-dev
+	sudo apt-get install libxmu-dev
+	sudo apt-get install build-essential
+	sudo apt-get install binutils-gold
+ - Create symbolic links for libraries
+	sudo rm /usr/lib/libGL.so
+	sudo ln -s /usr/lib/libGL.so.1 /usr/lib/libGL.so
+ - Check dependent packages
+	gcc, g++, make, makedepend, xutils, bison, flex, zlib, CUDA toolkit, doxgen, graphvi
+	python-pmw, python-ply, python-numpy, libpng12-dev, python-matplotlib
+	sudo apt-get install build-essential xutils-dev bison zlib1g-dev flex libglu1-mesa-dev
+	sudo apt-get install doxygen graphviz
+	sudo apt-get install python-pmw python-ply python-numpy libpng12-dev python-matplotlib
+	
+5. Build GPGPU-sim
+ - Download from http://www.gpgpu-sim.org
+	tar -xvzf gpgpu-sim.tgz
+ - Or, download simulator with git
+	git clone https://github.com/gpgpu-sim/gpgpu-sim_distribution.git
+	git clone git://dev.ece.ubc.ca/gpgpu-sim
+ - Add CUDA installation path in the environment file (e.g. .bashrc)
+	source ~/.bashrc
+	source setup_environment
+	make
+ - Add CUDA path
+	export CUDA_INSTALL_PATH=/usr/local/cuda
+	export PATH=$CUDA_INSTALL_PATH/bin
+
+6. Simulation with Rodinia benchmark
+ - Decompress Rodinia benchmark suit
+	tar -xvjf rodinia_2.4.tar.bz2
+ - Source GPGPU-sim simulation environment and copy H/W configuration
+	source ~/Tools/gpgpu-sim/v3.x/setup_environment
+	cp ~/Tools/gpgpu-sim/v3.x/config/GTX480/* .
+ - Rodinia benchmark requires version 4.4 of gcc and g++ compilers
+ 	sudo apt-get install gcc-4.4 g++-4.4
+ 	sudo rm /usr/bin/gcc
+	sudo ln -s /usr/bin/gcc-4.4 /usr/bin/gcc
+	sudo rm /usr/bin/g++
+	sudo ln -s /usr/bin/g++-4.4 /usr/bin/g++
+ - Modify common Makefile configuration in commmon folder, CUDA path and CUDA SDK path
+ - Select the benchmark application and built it
+	make
+ - Run the application
+	./run > result.txt
+
+7. Run on everest (old flex version)
+ - Remove a space after (LEX) -P in Makefile in cuobjdump_to_ptxplus and libcuda folders
+ - Chanage -o option to --outfile= in Makefile in the cuda-sim folder 
+
+8. BUGFIX
+ - longopregs is not released when releaseRegister is called (released only if releaseRegister's' is called
+	in scoreboard.cc
+	comment out longopregs.erase in releaseRegisters()
+	add longopregs[wid].erase(regnum) in releaseRegister()

@@ -1,2 +1,24 @@
 Changes of new 3.2.2
  - Add hash set_index_function. It is set as hash function for GTX480
+
+
+for CUDA
+* Please make sure your PATH includes /usr/local/cuda/bin
+* Please make sure your LD_LIBRARY_PATH
+*   for 32-bit Linux distributions includes /usr/local/cuda/lib
+*   for 64-bit Linux distributions includes /usr/local/cuda/lib64:/usr/local/cuda/lib
+* OR
+*   for 32-bit Linux distributions add /usr/local/cuda/lib
+*   for 64-bit Linux distributions add /usr/local/cuda/lib64 and /usr/local/cuda/lib
+* to /etc/ld.so.conf and run ldconfig as root
+
+* Please read the release notes in /usr/local/cuda/doc/
+
+* To uninstall CUDA, remove the CUDA files in /usr/local/cuda
+* Installation Complete
+
+libxi-dev
+libxmu-dev
+freeglut3-dev
+libcuda1-346
+libcudart5.5
