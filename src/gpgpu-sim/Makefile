@@ -53,6 +53,25 @@ else
 	CXXFLAGS += 
 endif
 
+# gunjae: enable this definition when the GPGPU-sim runs on clusters
+ifeq ($(HOSTNAME),everest.usc.edu)
+	CXXFLAGS += -DRPT_STDERR=1
+else
+	CXXFLAGS += -DRPT_STDERR=0
+endif
+
+# gunjae: reporting on / off
+ifeq ($(HOSTNAME),everest.usc.edu)
+else
+endif
+
+# gunjae: enforce cache configuration
+CXXFLAGS += -DFORCE_CACHE_CONFIG=1
+
+# gunjae: profiling on/off
+
+# gunjae: miscellaneous options
+
 POWER_FLAGS=
 ifneq ($(GPGPUSIM_POWER_MODEL),)
 	POWER_FLAGS = -I$(GPGPUSIM_POWER_MODEL) -DGPGPUSIM_POWER_MODEL

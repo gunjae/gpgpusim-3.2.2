@@ -842,7 +842,9 @@ void gpgpu_sim::set_cache_config(std::string kernel_name)
 	}
 }
 
-
+#if (FORCE_CACHE_CONFIG)
+void gpgpu_sim::change_cache_config(FuncCache cache_config) {}
+#else
 void gpgpu_sim::change_cache_config(FuncCache cache_config)
 {
 	if(cache_config != m_shader_config->m_L1D_config.get_cache_status()){
@@ -884,6 +886,7 @@ void gpgpu_sim::change_cache_config(FuncCache cache_config)
 		break;
 	}
 }
+#endif	// FORCE_CACHE_CONFIG
 
 
 void gpgpu_sim::clear_executed_kernel_info()
