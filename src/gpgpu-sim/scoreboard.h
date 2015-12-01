@@ -48,6 +48,22 @@ public:
     bool pendingWrites(unsigned wid) const;
     void printContents() const;
     const bool islongop(unsigned warp_id, unsigned regnum);
+    
+	// gunjae: more functions
+	bool is_undet(unsigned warp_id, unsigned regnum) const;
+	bool is_det(unsigned warp_id, unsigned regnum) const;
+
+	bool check_undet( unsigned wid, const inst_t *inst) const;
+	bool check_det( unsigned wid, const inst_t *inst) const;
+
+	void print_max_reg_id( FILE *fp ) const;
+	void print_undet_regs( FILE *fp ) const;
+	void print_det_regs( FILE *fp ) const;
+	
+	// gunjae: index of deterministic / undeterministic registers
+	std::vector< std::set<unsigned> > det_regs;
+	std::vector< std::set<unsigned> > undet_regs;
+
 private:
     void reserveRegister(unsigned wid, unsigned regnum);
     int get_sid() const { return m_sid; }
@@ -59,6 +75,9 @@ private:
     std::vector< std::set<unsigned> > reg_table;
     //Register that depend on a long operation (global, local or tex memory)
     std::vector< std::set<unsigned> > longopregs;
+
+	// gunjae
+	unsigned m_max_reg_id;	// for reference
 };
 
 
