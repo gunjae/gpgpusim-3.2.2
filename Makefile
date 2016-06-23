@@ -236,7 +236,8 @@ cleandocs:
 clean: makedirs
 	$(MAKE) cleangpgpusim
 
-cleangpgpusim: cleandocs
+#cleangpgpusim: cleandocs
+cleangpgpusim:
 	rm -rf $(SIM_LIB_DIR)
 	rm -rf $(SIM_OBJ_FILES_DIR)
 	rm -f *~ *.o ./src/cuda-sim/*.gcda ./src/cuda-sim/*.gcno ./src/cuda-sim/*.gcov ./src/cuda-sim/libgpgpu_ptx_sim.a \

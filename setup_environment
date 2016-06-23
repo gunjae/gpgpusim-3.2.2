@@ -1,9 +1,19 @@
 # see README before running this
 
+# disable check shell environment to make possible to run pbsnodes
 #ps -p $$ | awk '/bash/ || / sh/ || /zsh/ {exit 1;}' && echo "ERROR ** source setup_environment must be run in a bash, zsh or sh shell; see README" && exit
 
 export GPGPUSIM_SETUP_ENVIRONMENT_WAS_RUN=
 export GPGPUSIM_ROOT="$( cd "$( dirname "$BASH_SOURCE" )" && pwd )"
+
+# for running graph applications in pbsnodes
+case "$HOSTNAME" in
+everest.usc.edu)
+	export CUDA_INSTALL_PATH=/share/apps/cuda40new/cuda
+	;;
+*)
+	;;
+esac
 
 GPGPUSIM_VERSION_STRING=`cat $GPGPUSIM_ROOT/version | awk '/Version/ {print $8}'`
 GPGPUSIM_BUILD_STRING=`cat $GPGPUSIM_ROOT/version | awk '/Change/ {print $6}'`
