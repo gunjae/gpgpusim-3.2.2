@@ -29,6 +29,10 @@
 #include "stat-tool.h"
 #include <assert.h>
 
+// gunjae
+#include "mem_latency_stat.h"
+#include "gpu-sim.h"
+
 #define MAX_DEFAULT_CACHE_SIZE_MULTIBLIER 4
 // used to allocate memory that is large enough to adapt the changes in cache size across kernels
 
@@ -244,8 +248,9 @@ enum cache_request_status tag_array::access( new_addr_type addr, unsigned time, 
         if ( m_config.m_alloc_policy == ON_MISS ) {
             if( m_lines[idx].m_status == MODIFIED ) {
                 wb = true;
-                evicted = m_lines[idx];
+                //evicted = m_lines[idx];
             }
+            evicted = m_lines[idx];	// gunjae: return evicted block when miss
             m_lines[idx].allocate( m_config.tag(addr), m_config.block_addr(addr), time );
         }
         break;
@@ -259,6 +264,33 @@ enum cache_request_status tag_array::access( new_addr_type addr, unsigned time, 
         abort();
     }
     return status;
+}
+
+// gunjae: overloading of access() to add warp_inst_t
+enum cache_request_status tag_array::access( new_addr_type addr, unsigned time, unsigned &idx, const warp_inst_t &inst )
+{
+    bool wb=false;
+    cache_block_t evicted;
+    enum cache_request_status result = access(addr,time,idx,wb,evicted,inst);
+    assert(!wb);
+    return result;
+}
+
+enum cache_request_status tag_array::access( new_addr_type addr, unsigned time, unsigned &idx, bool &wb, cache_block_t &evicted, const warp_inst_t &inst ) 
+{
+    enum cache_request_status status = probe(addr,idx);
+    enum cache_request_status result = access(addr,time,idx,wb,evicted);
+	if ((status==MISS) && (m_config.m_alloc_policy==ON_MISS))
+		m_lines[idx].allocate_inst( inst );
+}
+
+// gunjae: overloading of fill() to add warp_inst_t
+void tag_array::fill( new_addr_type addr, unsigned time, const warp_inst_t &inst )
+{
+	fill( addr, time );
+    unsigned idx;
+    enum cache_request_status status = probe(addr,idx);
+	m_lines[idx].allocate_inst( inst );
 }
 
 void tag_array::fill( new_addr_type addr, unsigned time )
@@ -734,7 +766,8 @@ void baseline_cache::fill(mem_fetch *mf, unsigned time){
     if ( m_config.m_alloc_policy == ON_MISS )
         m_tag_array->fill(e->second.m_cache_index,time);
     else if ( m_config.m_alloc_policy == ON_FILL )
-        m_tag_array->fill(e->second.m_block_addr,time);
+        m_tag_array->fill(e->second.m_block_addr,time,mf->get_inst());
+        //m_tag_array->fill(e->second.m_block_addr,time);
     else abort();
     bool has_atomic = false;
     m_mshrs.mark_ready(e->second.m_block_addr, has_atomic);
@@ -779,20 +812,27 @@ void baseline_cache::send_read_request(new_addr_type addr, new_addr_type block_a
 
     bool mshr_hit = m_mshrs.probe(block_addr);
     bool mshr_avail = !m_mshrs.full(block_addr);
-    if ( mshr_hit && mshr_avail ) {
-    	if(read_only)
-    		m_tag_array->access(block_addr,time,cache_index);
-    	else
-    		m_tag_array->access(block_addr,time,cache_index,wb,evicted);
+	// gunjae: to allocate inst
+	const warp_inst_t inst = mf->get_inst();
 
+    if ( mshr_hit && mshr_avail ) {
+    	if(read_only) {
+    		m_tag_array->access(block_addr,time,cache_index,inst);
+    		//m_tag_array->access(block_addr,time,cache_index);
+		} else {
+    		m_tag_array->access(block_addr,time,cache_index,wb,evicted,inst);
+    		//m_tag_array->access(block_addr,time,cache_index,wb,evicted);
+		}
         m_mshrs.add(block_addr,mf);
         do_miss = true;
     } else if ( !mshr_hit && mshr_avail && (m_miss_queue.size() < m_config.m_miss_queue_size) ) {
-    	if(read_only)
-    		m_tag_array->access(block_addr,time,cache_index);
-    	else
-    		m_tag_array->access(block_addr,time,cache_index,wb,evicted);
-
+    	if(read_only) {
+    		m_tag_array->access(block_addr,time,cache_index,inst);
+    		//m_tag_array->access(block_addr,time,cache_index);
+		} else {
+    		m_tag_array->access(block_addr,time,cache_index,wb,evicted,inst);
+    		//m_tag_array->access(block_addr,time,cache_index,wb,evicted);
+		}
         m_mshrs.add(block_addr,mf);
         m_extra_mf_fields[mf] = extra_mf_fields(block_addr,cache_index, mf->get_data_size());
 		// GUNJAE: data size is adjusted to line size of cache

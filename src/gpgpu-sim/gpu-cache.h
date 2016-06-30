@@ -69,6 +69,8 @@ struct cache_block_t {
         m_fill_time=0;
         m_last_access_time=0;
         m_status=INVALID;
+		// gunjae
+		invalidate();
     }
     void allocate( new_addr_type tag, new_addr_type block_addr, unsigned time )
     {
@@ -79,12 +81,29 @@ struct cache_block_t {
         m_fill_time=0;
         m_status=RESERVED;
     }
+	// gunjae: overloading
+    void allocate( new_addr_type tag, new_addr_type block_addr, unsigned time, const warp_inst_t &inst )
+	{
+		allocate( tag, block_addr, time);
+		allocate_inst( inst );
+	}
+	void allocate_inst( const warp_inst_t &inst )
+	{
+		warp_inst_t inst_copy = inst;
+		m_inst = inst_copy;
+	}
     void fill( unsigned time )
     {
         assert( m_status == RESERVED );
         m_status=VALID;
         m_fill_time=time;
     }
+	// gunjae: invalidate
+	void invalidate()
+	{
+		m_status=INVALID;
+		m_inst.clear();
+	}
 
     new_addr_type    m_tag;
     new_addr_type    m_block_addr;
@@ -92,6 +111,9 @@ struct cache_block_t {
     unsigned         m_last_access_time;
     unsigned         m_fill_time;
     cache_block_state    m_status;
+
+	// gunjae
+	warp_inst_t m_inst;
 };
 
 enum replacement_policy_t {
@@ -343,8 +365,11 @@ public:
     enum cache_request_status probe( new_addr_type addr, unsigned &idx ) const;
     enum cache_request_status access( new_addr_type addr, unsigned time, unsigned &idx );
     enum cache_request_status access( new_addr_type addr, unsigned time, unsigned &idx, bool &wb, cache_block_t &evicted );
+	enum cache_request_status access( new_addr_type addr, unsigned time, unsigned &idx, const warp_inst_t &inst );	// overloading
+    enum cache_request_status access( new_addr_type addr, unsigned time, unsigned &idx, bool &wb, cache_block_t &evicted, const warp_inst_t &inst );	// overloading
 
     void fill( new_addr_type addr, unsigned time );
+    void fill( new_addr_type addr, unsigned time, const warp_inst_t &inst );	// overloading
     void fill( unsigned idx, unsigned time );
 
     unsigned size() const { return m_config.get_num_lines();}

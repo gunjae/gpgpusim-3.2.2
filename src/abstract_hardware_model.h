@@ -36,6 +36,9 @@ class kernel_info_t;
 #define MAX_CTA_PER_SHADER 32
 #define MAX_BARRIERS_PER_CTA 16
 
+#define BIT(a,x) ((a & (1<<x)) >> x)	// detect X bit number
+#define BITR(a,x,y) ((a >> x) & ~(~0 << (y-x+1)))	// extract [y:x] from X
+
 enum _memory_space_t {
    undefined_space=0,
    reg_space,
@@ -826,6 +829,18 @@ public:
     virtual ~warp_inst_t(){
     }
 
+	// gunjae: hased pc
+	address_type m_hash_pc;
+	void set_hash_pc()
+	{
+		address_type pc_lower = BITR(pc,3,9);		// bit[9:3], multiple of 8
+		address_type pc_upper = BITR(pc,10,12);	// bit[12:10], is it OK?
+		pc_upper |= BIT(pc,16) << 4;	// bit 16
+		pc_upper |= BITR(pc,18,19) << 5;	// bit 18, 19
+		m_hash_pc = pc_lower ^ pc_upper;
+	}
+	address_type get_hash_pc() { return m_hash_pc; }
+
     // modifiers
     void broadcast_barrier_reduction( const active_mask_t& access_mask);
     void do_atomic(bool forceDo=false);
@@ -845,6 +860,8 @@ public:
         cycles = initiation_interval;
         m_cache_hit=false;
         m_empty=false;
+		// gunjae: set m_hash_pc when instruction is issued.
+		set_hash_pc();
     }
     const active_mask_t & get_active_mask() const
     {
