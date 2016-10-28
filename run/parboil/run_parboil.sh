@@ -104,6 +104,12 @@ spm)
 	IDATA="-i ${DSET}/bcsstk18.mtx,${DSET}/vector.bin"
 	ODATA="-o bcsstk18.out"
 	;;
+sp1)
+	BIN=${PARBOIL_BIN}/spmv/build/cuda_default/spmv
+	DSET=${PARBOIL_DATA}/spmv/large/input
+	IDATA="-i ${DSET}/Dubcova3.mtx.bin,${DSET}/vector.bin"
+	ODATA="-o Dubcova3.out"
+	;;
 ste)
 	BIN=${PARBOIL_BIN}/stencil/build/cuda_default/stencil
 	DSET=${PARBOIL_DATA}/stencil/default/input

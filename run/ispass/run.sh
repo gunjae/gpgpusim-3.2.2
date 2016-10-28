@@ -8,21 +8,26 @@
 # Environments
 
 # GPGPU-sim
-GPGPUSIM_DIR=~/workspace/gpgpusim
+GPGPUSIM_DIR=~/workspace/gpgpu-svc
 
 # Configs
-CONFIG_DIR=~/workspace/gpgpusim/run/config
+CONFIG_DIR=~/workspace/gpgpu-svc/run/config
 #CONFIG_LIST="gto lrr 2lv"
 #CONFIG_LIST="gto_sc1 lrr_sc1 2lv_sc1"
-CONFIG_LIST="gto"
+#CONFIG_LIST="lrr_dl164k"
+CONFIG_LIST="lrr"
+#CONFIG_LIST="gtx780"
 #CONFIG_LIST="2lv_sc1 gto_sc1 lrr_sc1"
+L1D_CONFIG="s16km"
 #BENCH_LIST="BFS LPS MUM NQU RAY WP"
 BENCH_LIST="BFI"
+#BENCH_LIST="RAY"
 #BENCH_LIST="MUM"
 #BENCH_LIST="CP LIB"
 #BENCH_LIST="LPS MUM"
 #BENCH_LIST="NQU RAY"
 #BENCH_LIST="STO WP"
+ICNT_CONFIG="config_fermi_islip.icnt"
 
 
 # Running directory
@@ -43,6 +48,8 @@ for i in ${BENCH_LIST}; do
 
 		echo " + Copying configuration files to ${RUN_DIR} ..."
 		cp ${CONFIG_DIR}/gpgpusim_${j}.config ./${RUN_DIR}/gpgpusim.config
+		#cat ${CONFIG_DIR}/l1d_${L1D_CONFIG}.config >> ./${RUN_DIR}/gpgpusim.config
+		echo "-inter_config_file ${ICNT_CONFIG}" >> ./${RUN_DIR}/gpgpusim.config
 		cp ${CONFIG_DIR}/*.icnt ./${RUN_DIR}/.
 		cp ${CONFIG_DIR}/*.xml ./${RUN_DIR}/.
 		cp rename_rpt.sh ./${RUN_DIR}/.

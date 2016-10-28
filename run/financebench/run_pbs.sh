@@ -4,7 +4,7 @@
 #	Gunjae Koo (gunjae.koo@gmail.com)
 # ******************************************
 
-CONFIG_DIR=~/workspace/gpgpu-msh/run/config
+CONFIG_DIR=~/workspace/gpgpu-svc/run/config
 
 ## list of benchmarks to be simulated
 #BENCH_LIST="bf1 cut his lbm mrg mrq sad sge spm ste tpc"

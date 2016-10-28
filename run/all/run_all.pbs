@@ -152,6 +152,18 @@ b14)
 	BIN="${RODINIA_BIN}/bfs"
 	IDATA="${RODINIA_DATA}/bfs/graph16M.txt"
 	;;
+b15)
+	BIN="${RODINIA_BIN}/bfs"
+	IDATA="${RODINIA_DATA}/bfs/graph32k500kedges_SV.txt"
+	;;
+b16)
+	BIN="${RODINIA_BIN}/bfs"
+	IDATA="${RODINIA_DATA}/bfs/graph32k5MEdges.txt"
+	;;
+b17)
+	BIN="${RODINIA_BIN}/bfs"
+	IDATA="${RODINIA_DATA}/bfs/graph8knodes300kedges.txt"
+	;;
 btr)
 	BIN="${RODINIA_BIN}/b+tree"
 	IDATA="file ${RODINIA_DATA}/b+tree/mil.txt command ${RODINIA_DATA}/b+tree/command.txt"
@@ -294,7 +306,8 @@ sr2)
 	;;
 scg)
 	BIN="${RODINIA_BIN}/sc_gpu"
-	IDATA="10 20 256 65536 65536 1000 none"
+	IDATA="10 20 256 524288 524288 1000 none"
+#	IDATA="10 20 256 65536 65536 1000 none"
 	ODATA="output.txt"
 	PAR="1"
 	;;

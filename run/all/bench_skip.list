@@ -1,0 +1,4 @@
+## list of benchmarks
+#BN_SKIP="pff bfs b04 btr mam sao pvr cv3 trd mst"
+BN_SKIP="RAY mce bfs b04 b10 btr pff lav hs1 nw scg sad spm sp0 mam sao pvr pvc sm 2mm 3mm dit gmm cv3 trd mst ss0 LIB wal"
+BN_SKIP="${BN_SKIP} RAY gaf sr2 mrg sge mce stn aps"
