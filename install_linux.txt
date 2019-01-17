@@ -3,7 +3,7 @@
 //		- Gunjae Koo (gunjae.koo@gmail.com)
 // *********************************************************
 
-0. This installation guide is tested on Linux Mint 17.2 64-bits (Ubuntu 14.04 LTS)
+0. This installation guide is tested on Linux Mint 17.3 64-bits (Ubuntu 14.04 LTS)
 
 1. Install appropriate C/C++ compiler versions
  - GPGPU-Sim is OK for gcc/g++ 4.4 or 4.5 versions. It was tested with the 4.5 version, but 4.4 is also OK
@@ -32,7 +32,7 @@
 	wget http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_4.2.9_linux_64_ubuntu11.04.run
 	wget http://developer.download.nvidia.com/compute/cuda/4_2/rel/sdk/gpucomputingsdk_4.2.9_linux.run
 	chmod 755 *.run
- - Install CUDA Toolkit (for NVCC) in /usr/bin/cuda
+ - Install CUDA Toolkit (for NVCC) in /usr/local/cuda
 	./cudatoolkit_4.2.9_linux_64_ubuntu11.04.run
  - Install CUDA SDK in ~/bin/NVIDIA_GPU_Computing_SDK4
 	./gpucomputingsdk_4.2.9_linux.run
