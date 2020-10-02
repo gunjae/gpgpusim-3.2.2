@@ -34,13 +34,13 @@
 	chmod 755 *.run
  - Install CUDA Toolkit (for NVCC) in /usr/local/cuda
 	./cudatoolkit_4.2.9_linux_64_ubuntu11.04.run
- - Install CUDA SDK in ~/bin/NVIDIA_GPU_Computing_SDK4
+ - Install CUDA SDK in ~/workspace/cuda_sdk4
 	./gpucomputingsdk_4.2.9_linux.run
  - Add environment settings in .bashrc
 	PATH=$PATH:/usr/local/cuda/bin
 	export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64:/usr/local/cuda/lib
 	export CUDA_INSTALL_PATH=/usr/local/cuda
-	export NVIDIA_COMPUTE_SDK_LOCATION=~/bin/NVIDIA_GPU_Computing_SDK4
+	export NVIDIA_COMPUTE_SDK_LOCATION=~/workspace/cuda_sdk4
 
 4. Install GPGPU-Sim
  - Install dependent packages

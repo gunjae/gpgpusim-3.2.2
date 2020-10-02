@@ -6,6 +6,20 @@
 # This script for automating the installation process of GPGPU-Sim.
 # The installation process is tested on Linux Mint 17.3 64-bits (based on Ubuntu 14.04 LTS)
 
+# functions
+function confirm() {
+	# call with a prompt string or use a default
+	read -r -p "Will you install $1? [y/N] " response
+	case $response in
+		[yY][eE][sS]|[yY])
+			true
+			;;
+		*)
+			false
+			;;
+	esac
+}
+
 # -------------------------------------
 # Installing C/C++ compilers
 # -------------------------------------
@@ -49,19 +63,22 @@ sudo apt-get install libcuda1-346 libcudart5.5
 echo " -------------------------------------------------- "
 echo " Downloadiing CUDA Toolkit and SDK"
 echo " -------------------------------------------------- "
-wget http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_4.2.9_linux_64_ubuntu11.04.run
-wget http://developer.download.nvidia.com/compute/cuda/4_2/rel/sdk/gpucomputingsdk_4.2.9_linux.run
-chmod 755 *.run
+confirm "downalod_cuda_toolkit_and_sdk" && \
+	wget http://developer.download.nvidia.com/compute/cuda/4_2/rel/toolkit/cudatoolkit_4.2.9_linux_64_ubuntu11.04.run && \
+	wget http://developer.download.nvidia.com/compute/cuda/4_2/rel/sdk/gpucomputingsdk_4.2.9_linux.run && \
+	chmod 755 *.run
 
 echo " -------------------------------------------------- "
 echo " Installing CUDA Toolkit for nvcc. (target = /usr/local/cuda)"
 echo " -------------------------------------------------- "
-sudo ./cudatoolkit_4.2.9_linux_64_ubuntu11.04.run
+confirm "install_nvcc" && \
+	sudo ./cudatoolkit_4.2.9_linux_64_ubuntu11.04.run
 
 echo " -------------------------------------------------- "
-echo " Installing CUDA SDK (target = ~/bin/NVIDIA_GPU_Computing_SDK4)"
+echo " Installing CUDA SDK (target = ~/workspace/cuda_sdk4)"
 echo " -------------------------------------------------- "
-./gpucomputingsdk_4.2.9_linux.run
+confirm "isntall_cuda_sdk" && \
+	./gpucomputingsdk_4.2.9_linux.run
 
 # -------------------------------------------------
 # Install GPGPU-Sim
