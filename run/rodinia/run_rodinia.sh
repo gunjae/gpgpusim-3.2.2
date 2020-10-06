@@ -6,9 +6,9 @@ if [ ! -n "$1" ]; then
 fi
 
 BENCH=$1
-RODINIA_DIR=~/workspace/gpgpu-bench/rodinia_3.0/cuda
-RODINIA_DATA=~/workspace/gpgpu-bench/rodinia_3.0/data
-RODINIA_BIN=~/workspace/gpgpu-bench/rodinia_3.0/bin/linux/cuda
+RODINIA_DIR=~/workspace/gpgpu-bench/rodinia_3.1/cuda
+RODINIA_DATA=~/workspace/gpgpu-bench/rodinia_3.1/data
+RODINIA_BIN=~/workspace/gpgpu-bench/rodinia_3.1/bin/linux/cuda
 
 BIN=""
 DSET=""
@@ -200,7 +200,7 @@ mmg)
 	IDATA="${RODINIA_DATA}/mummergpu/NC_003997.fna ${RODINIA_DATA}/mummergpu/NC_003997_q100bp.fna"
 	ODATA="> NC_00399.out"
 	;;
-	myo)
+myo)
 	BIN="${RODINIA_BIN}/myocyte"
 	PAR="100 1 0"
 	;;
