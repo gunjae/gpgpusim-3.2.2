@@ -191,8 +191,8 @@ kmn)
 	IDATA="-o -i ${RODINIA_DATA}/kmeans/kdd_cup" 
 	;;
 lud)
-	BIN="${RODINIA_BIN}/lud_cuda"
-	IDATA="-i ${RODINIA_DATA}/lud/2045.dat" 
+	BIN="${RODINIA_BIN}/lud"
+	IDATA="-i ${RODINIA_DATA}/lud/2048.dat" 
 	#PAR="-s 256 -v"
 	;;
 mmg)
@@ -238,7 +238,7 @@ sr2)
 	PAR="2048 2048 0 127 0 127 0.5 2"
 	;;
 scg)
-	BIN="${RODINIA_BIN}/sc_gpu"
+	BIN="${RODINIA_BIN}/streamcluster"
 	IDATA="10 20 256 655360 655360 1000 none"
 	ODATA="output.txt"
 	PAR="1"
