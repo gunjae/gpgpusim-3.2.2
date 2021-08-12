@@ -21,6 +21,17 @@ function confirm() {
 }
 
 # -------------------------------------
+# Installing the basic applications (for Docker environments)
+# -------------------------------------
+echo " # -------------------------------------"
+echo " # Installing the basic applications (for Docker environments)"
+echo " # -------------------------------------"
+confirm "installing_basic_apps" && \
+	sudo apt-get update && \
+	sudo apt-get install gcc g++ git vim wget
+
+
+# -------------------------------------
 # Installing C/C++ compilers
 # -------------------------------------
 echo " -------------------------------------------------- "
