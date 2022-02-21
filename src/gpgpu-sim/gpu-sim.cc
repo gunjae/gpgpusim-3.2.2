@@ -660,19 +660,19 @@ bool gpgpu_sim::active()
     if (m_config.gpu_max_cycle_opt && (gpu_tot_sim_cycle + gpu_sim_cycle) >= m_config.gpu_max_cycle_opt) {
     	printf("GK: over max cycles @ %9lld\n", gpu_tot_sim_cycle+gpu_sim_cycle);
 		gpu_print_stat();
-		abort();
+		exit(0);
 		return false;
 	}
     if (m_config.gpu_max_insn_opt && (gpu_tot_sim_insn + gpu_sim_insn) >= m_config.gpu_max_insn_opt) {
 		printf("GK: over max instructions @ %9lld\n", gpu_tot_sim_cycle+gpu_sim_cycle);
 		gpu_print_stat();
-		abort();
+		exit(0);
 		return false;
 	}
     if (m_config.gpu_max_cta_opt && (gpu_tot_issued_cta >= m_config.gpu_max_cta_opt) ) {
 		printf("GK: over max CTAs @ %9lld\n", gpu_tot_sim_cycle+gpu_sim_cycle);
 		gpu_print_stat();
-		abort();
+		exit(0);
 		return false;
 	}
     if (m_config.gpu_deadlock_detect && gpu_deadlock) 
