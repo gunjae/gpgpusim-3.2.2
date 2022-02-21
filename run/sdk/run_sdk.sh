@@ -6,8 +6,8 @@ if [ ! -n "$1" ]; then
 fi
 
 BENCH=$1
-SDK_DIR=~/workspace/gpgpu-bench/sdk4/src
-SDK_BIN=~/workspace/gpgpu-bench/sdk4/bin/linux/release
+SDK_DIR=~/workspace/cuda_sdk4/C/src
+SDK_BIN=~/workspace/cuda_sdk4/C/bin/linux/release
 
 BIN=""
 DSET=""

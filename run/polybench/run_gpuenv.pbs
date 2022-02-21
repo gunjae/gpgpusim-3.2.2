@@ -1,7 +1,0 @@
-GPGPUSIM_DIR=~/workspace/gpgpu-svc
-#GPGPUSIM_DIR=/home/gunjae/Tools/gpgpu-sim/v3.x
-
-cd ${GPGPUSIM_DIR}
-source setup_environment
-cd ${WORKSPACE}
-

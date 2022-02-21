@@ -6,9 +6,9 @@ if [ ! -n "$1" ]; then
 fi
 
 BENCH=$1
-RODINIA_DIR=~/workspace/gpgpu-bench/rodinia_3.0/cuda
-RODINIA_DATA=~/workspace/gpgpu-bench/rodinia_3.0/data
-RODINIA_BIN=~/workspace/gpgpu-bench/rodinia_3.0/bin/linux/cuda
+RODINIA_DIR=~/workspace/gpgpu-bench/rodinia_3.1/cuda
+RODINIA_DATA=~/workspace/gpgpu-bench/rodinia_3.1/data
+RODINIA_BIN=~/workspace/gpgpu-bench/rodinia_3.1/bin/linux/cuda
 
 BIN=""
 DSET=""
@@ -191,8 +191,8 @@ kmn)
 	IDATA="-o -i ${RODINIA_DATA}/kmeans/kdd_cup" 
 	;;
 lud)
-	BIN="${RODINIA_BIN}/lud_cuda"
-	IDATA="-i ${RODINIA_DATA}/lud/2045.dat" 
+	BIN="${RODINIA_BIN}/lud"
+	IDATA="-i ${RODINIA_DATA}/lud/2048.dat" 
 	#PAR="-s 256 -v"
 	;;
 mmg)
@@ -200,7 +200,7 @@ mmg)
 	IDATA="${RODINIA_DATA}/mummergpu/NC_003997.fna ${RODINIA_DATA}/mummergpu/NC_003997_q100bp.fna"
 	ODATA="> NC_00399.out"
 	;;
-	myo)
+myo)
 	BIN="${RODINIA_BIN}/myocyte"
 	PAR="100 1 0"
 	;;
@@ -238,7 +238,7 @@ sr2)
 	PAR="2048 2048 0 127 0 127 0.5 2"
 	;;
 scg)
-	BIN="${RODINIA_BIN}/sc_gpu"
+	BIN="${RODINIA_BIN}/streamcluster"
 	IDATA="10 20 256 655360 655360 1000 none"
 	ODATA="output.txt"
 	PAR="1"
